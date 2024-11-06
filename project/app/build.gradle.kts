@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -51,6 +53,8 @@ android {
 
 dependencies {
 
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -66,4 +70,20 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Supabase
+    implementation(libs.ktor.client.okhttp)
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.postgrest.kt)
+    implementation(libs.auth.kt)
+    implementation(libs.realtime.kt)
+
+
+    //Serializable
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.java.time)
+
+    //Navigation
+    implementation(libs.androidx.navigation.compose)
+
 }
