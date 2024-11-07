@@ -75,7 +75,7 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(platform(libs.supabase.bom))
     implementation(libs.postgrest.kt)
-    implementation(libs.auth.kt)
+
     implementation(libs.realtime.kt)
 
 
