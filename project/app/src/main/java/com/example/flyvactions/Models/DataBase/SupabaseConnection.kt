@@ -6,6 +6,7 @@ import io.github.jan.supabase.gotrue.FlowType
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.realtime.Realtime
 
+
 //Объект соединение с Supabase
 object SupabaseConnection {
     val supabase = createSupabaseClient(supabaseUrl = "https://lpdnebdhpgflnqtlksnj.supabase.co",
