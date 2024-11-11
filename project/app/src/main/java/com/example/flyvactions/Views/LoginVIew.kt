@@ -1,5 +1,7 @@
 package com.example.flyvactions.Views
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -43,6 +46,7 @@ import com.example.flyvactions.ui.theme.BlueMain
 import com.example.flyvactions.ui.theme.ColorTextDark
 import com.example.flyvactions.ui.theme.ColorTextLight
 import com.example.flyvactions.ui.theme.interFontFamily
+import kotlinx.coroutines.delay
 
 
 //Окно LoginView
@@ -51,6 +55,9 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
     val focusManager = LocalFocusManager.current
     val flagLoading = remember{ mutableStateOf(false) }
     val context = LocalContext.current
+
+    val lastClickTime = remember { mutableLongStateOf(0L) }
+
     Column(modifier = Modifier.fillMaxSize().padding(bottom = 40.dp)
         //Снятие фокуса с элемента
         .pointerInput(Unit){
@@ -140,12 +147,32 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
         }
 
         Spacer(modifier = Modifier.height(120.dp))
-        println(flagLoading.value)
+
         Button(
             onClick = {
+                val currentTime = System.currentTimeMillis() //Берёт нынешнее системное время
                 flagLoading.value = true
-                viewModel.onSignInEmailPassword()
+
+                if(currentTime - lastClickTime.longValue < 10000)
+                    viewModel.counterQuery+=1
+                else
+                    viewModel.counterQuery = 1
+                lastClickTime.longValue = currentTime //При первой итерации равно 0, далее
+                // устанавливается системное время, что было назначено при нажатии на кнопку
+
+                if(viewModel.counterQuery>=6){
+                    Toast.makeText(context, "Слишком много запросов. Подождите одну минуту", Toast.LENGTH_SHORT).show()
+                    viewModel.flagQuery = false
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        viewModel.flagQuery = true
+                    }, 60000)
+                }
+                else
+                    viewModel.onSignInEmailPassword()
+
             },
+            enabled = viewModel.flagQuery,
             colors = ButtonColors(
                 containerColor = BlueMain,
                 contentColor = Color.White,
