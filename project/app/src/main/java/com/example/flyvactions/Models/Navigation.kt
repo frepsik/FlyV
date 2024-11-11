@@ -6,7 +6,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.flyvactions.Views.LoginScreen
+import com.example.flyvactions.Views.MainScreen
 
+//Навигация приложения
 @Composable
 fun Navigate(){
     val navController:NavHostController = rememberNavController()
@@ -16,5 +18,8 @@ fun Navigate(){
             LoginScreen(navController)
         }
 
+        composable(route = "mainView"){
+            MainScreen(navController)
+        }
     }
 }
