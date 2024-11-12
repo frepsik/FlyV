@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flyvactions.Models.BaseState
 import com.example.flyvactions.Models.DataBase.Queries.Get
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 //Viewmodel окна LoginView
@@ -20,7 +19,7 @@ class LoginViewModel:ViewModel() {
 
     private var get : Get = Get()
 
-    var flagQuery by mutableStateOf(true)
+    var isEnabledButton by mutableStateOf(true)
     var counterQuery : Int = 0
 
     //Можно изменять по .value, потому что тип MutableState (этот тип относится к изменяемым объектам (int, string, List - нет))
@@ -29,7 +28,6 @@ class LoginViewModel:ViewModel() {
     val userState: State<BaseState> = _userState
 
     fun onSignInEmailPassword(){
-
 
         viewModelScope.launch {
             try {
@@ -43,7 +41,6 @@ class LoginViewModel:ViewModel() {
                 _userState.value = BaseState.Error("ErrorSignIn: ${e}")
                 Log.d("SignIn", "${ _userState.value}")
             }
-
         }
 
     }

@@ -2,7 +2,6 @@ package com.example.flyvactions.Views
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +21,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,12 +39,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.flyvactions.Models.BaseState
+import com.example.flyvactions.Models.isInternetConnection
 import com.example.flyvactions.ViewModels.LoginViewModel
 import com.example.flyvactions.ui.theme.BlueMain
+import com.example.flyvactions.ui.theme.ColorBackgroundButton
 import com.example.flyvactions.ui.theme.ColorTextDark
 import com.example.flyvactions.ui.theme.ColorTextLight
 import com.example.flyvactions.ui.theme.interFontFamily
-import kotlinx.coroutines.delay
 
 
 //Окно LoginView
@@ -150,34 +149,47 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
 
         Button(
             onClick = {
-                val currentTime = System.currentTimeMillis() //Берёт нынешнее системное время
-                flagLoading.value = true
+                if(isInternetConnection(context)){
+                    val currentTime = System.currentTimeMillis() //Берёт нынешнее системное время
+                    flagLoading.value = true
 
-                if(currentTime - lastClickTime.longValue < 10000)
-                    viewModel.counterQuery+=1
-                else
-                    viewModel.counterQuery = 1
-                lastClickTime.longValue = currentTime //При первой итерации равно 0, далее
-                // устанавливается системное время, что было назначено при нажатии на кнопку
+                    if(currentTime - lastClickTime.longValue < 10000)
+                        viewModel.counterQuery+=1
+                    else
+                        viewModel.counterQuery = 1
+                    lastClickTime.longValue = currentTime //При первой итерации равно 0, далее
+                    // устанавливается системное время, что было назначено при нажатии на кнопку
 
-                if(viewModel.counterQuery>=6){
-                    Toast.makeText(context, "Слишком много запросов. Подождите одну минуту", Toast.LENGTH_SHORT).show()
-                    viewModel.flagQuery = false
+                    if(viewModel.counterQuery>=6){
+                        Toast.makeText(context, "Слишком много запросов. Подождите одну минуту", Toast.LENGTH_SHORT).show()
 
+                        viewModel.isEnabledButton = false
+                        flagLoading.value = false
+
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            viewModel.isEnabledButton = true
+                        }, 60000)
+                    }
+                    else
+                        viewModel.onSignInEmailPassword()
+                }
+                else{
+                    Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
+
+                    //Блокируем кнопку на минуту
+                    viewModel.isEnabledButton = false
                     Handler(Looper.getMainLooper()).postDelayed({
-                        viewModel.flagQuery = true
+                        viewModel.isEnabledButton = true
                     }, 60000)
                 }
-                else
-                    viewModel.onSignInEmailPassword()
-
             },
-            enabled = viewModel.flagQuery,
+            enabled = viewModel.isEnabledButton,
             colors = ButtonColors(
+
                 containerColor = BlueMain,
                 contentColor = Color.White,
-                disabledContainerColor = BlueMain,
-                disabledContentColor = Color.White
+                disabledContainerColor = ColorBackgroundButton,
+                disabledContentColor = ColorTextDark
             ),
             modifier = Modifier.height(52.dp).width(190.dp),
             shape = RoundedCornerShape(8.dp)
