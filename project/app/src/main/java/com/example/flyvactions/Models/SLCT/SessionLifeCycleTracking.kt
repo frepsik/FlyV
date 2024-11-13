@@ -18,9 +18,8 @@ import com.example.flyvactions.Models.DataBase.Queries.Auth
 class SessionLifeCycleTracking(private val context: Context) : DefaultLifecycleObserver {
 
     private var backgroundTime : Long? = if(recoveryTime(context)==null){-1} else{ recoveryTime(context) }
-    private var sessionTimeOut : Long = 1 * 60 * 1000L
+    private var sessionTimeOut : Long = 5 * 60 * 1000L
     private val auth : Auth = Auth()
-    private var flag : Boolean = false
 
     /**
      * Функция реализуется в момент включаения приложения
@@ -35,13 +34,8 @@ class SessionLifeCycleTracking(private val context: Context) : DefaultLifecycleO
         else if( recoverySession(auth, context) ){
             Log.d("Восстановление сессии","то что надо")
             Log.d("USER", "$${ProfileCache.profile.userInfo}  ${ProfileCache.profile}")
-            flag = true
         }
-        else{
-            Log.d("Создание сессии","то что надо")
-            flag = true
-        }
-
+        Log.d("Создание сессии", "По итогу всё равно создаём на основе прошлой или только новую")
     }
 
     /**
@@ -49,12 +43,11 @@ class SessionLifeCycleTracking(private val context: Context) : DefaultLifecycleO
      */
     override fun onStop(owner: LifecycleOwner) {
 
-        if(flag){
+        if(ProfileCache.profile.userInfo != null){
             backgroundTime = System.currentTimeMillis()
             saveBackgroundTime(backgroundTime!!, context)
             saveSession(auth, context)
             Log.d("Сохранение данных", "Те что надо")
         }
     }
-
 }

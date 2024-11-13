@@ -11,6 +11,13 @@ class Auth {
     private val db = SupabaseConnection.supabase
 
     /**
+     * Функция получения авторизованного пользователя
+     */
+    fun authorizedUser() : UserInfo?{
+        return db.auth.currentUserOrNull()
+    }
+
+    /**
      * Функция для восстановления сессии по токену пользователя, что ранее аавторизовывался в системе
      */
     suspend fun restoreSession(accessToken : String) : UserInfo{
