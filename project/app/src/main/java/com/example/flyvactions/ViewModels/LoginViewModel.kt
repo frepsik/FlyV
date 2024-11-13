@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flyvactions.Models.BaseState
+import com.example.flyvactions.Models.DataBase.Queries.Auth
 import com.example.flyvactions.Models.DataBase.Queries.Get
 import kotlinx.coroutines.launch
 
@@ -17,7 +18,7 @@ class LoginViewModel:ViewModel() {
     var emailUser by mutableStateOf("")
     var passwordUser by mutableStateOf("")
 
-    private var get : Get = Get()
+    private var auth : Auth = Auth()
 
     var isEnabledButton by mutableStateOf(true)
     var counterQuery : Int = 0
@@ -32,7 +33,7 @@ class LoginViewModel:ViewModel() {
         viewModelScope.launch {
             try {
                 _userState.value = BaseState.Loading
-                get.authorization(emailUser,passwordUser)
+                auth.authorization(emailUser,passwordUser)
 
                 _userState.value = BaseState.Success("SuccessSignIn")
                 Log.d("SignIn","${_userState.value}")

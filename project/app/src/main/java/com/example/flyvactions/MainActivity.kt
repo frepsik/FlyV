@@ -4,20 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import com.example.flyvactions.Models.Navigate
-import com.example.flyvactions.ui.theme.FlyVactionsTheme
-import com.example.flyvactions.ui.theme.Typography
-
-
-
+import com.example.flyvactions.Models.SLCT.SessionLifeCycleTracking
 
 
 class MainActivity : ComponentActivity() {
@@ -25,9 +13,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+
+        val sessionTracking = SessionLifeCycleTracking(this) //Создаём класс, что реализует функции, в момент запуска программы и завершения работы
+        lifecycle.addObserver(sessionTracking) //Подписываемся на изменения
+
         setContent {
             Navigate()
-
         }
     }
 }
