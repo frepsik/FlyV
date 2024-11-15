@@ -80,8 +80,11 @@ dependencies {
     //Serializable
     implementation(libs.kotlinx.serialization.json)
 
-
     //Navigation
     implementation(libs.androidx.navigation.compose)
+
+    //SVG
+    implementation(libs.coil.svg)
+    implementation(libs.coil.compose)
 
 }
