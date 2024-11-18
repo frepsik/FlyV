@@ -5,6 +5,7 @@ import io.github.jan.supabase.gotrue.Auth
 import io.github.jan.supabase.gotrue.FlowType
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.realtime.Realtime
+import io.github.jan.supabase.storage.Storage
 
 
 //Объект соединение с Supabase
@@ -17,5 +18,6 @@ object SupabaseConnection {
             flowType = FlowType.PKCE
         }
         install(Realtime)//Дальше это позволит получать уведомления о событиях произошедших с сущностями базы
+        install(Storage)
     }
 }

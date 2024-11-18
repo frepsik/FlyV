@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.20"
+
 }
 
 android {
@@ -42,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.5"
     }
     packaging {
         resources {
@@ -52,8 +52,6 @@ android {
 }
 
 dependencies {
-
-
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -76,15 +74,11 @@ dependencies {
     implementation(platform(libs.supabase.bom))
     implementation(libs.postgrest.kt)
     implementation(libs.realtime.kt)
-
-    //Serializable
-    implementation(libs.kotlinx.serialization.json)
+    implementation (libs.storage.kt)
 
     //Navigation
     implementation(libs.androidx.navigation.compose)
 
-    //SVG
-    implementation(libs.coil.svg)
-    implementation(libs.coil.compose)
-
+    //Coil
+    implementation (libs.coil.compose)
 }

@@ -3,6 +3,7 @@ package com.example.flyvactions.Views
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,7 +58,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
 
     val lastClickTime = remember { mutableLongStateOf(0L) }
 
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = 40.dp)
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = 40.dp).background(color = Color.White)
         //Снятие фокуса с элемента
         .pointerInput(Unit){
             detectTapGestures(onTap = {

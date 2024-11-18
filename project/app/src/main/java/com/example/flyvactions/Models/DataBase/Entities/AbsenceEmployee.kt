@@ -1,9 +1,8 @@
 package com.example.flyvactions.Models.DataBase.Entities
 
-import kotlinx.serialization.Contextual
+
 import kotlinx.serialization.SerialName //Помогает правильно указать название, потому что в базе snake_cae, а Kotlin camelCase
 import kotlinx.serialization.Serializable
-
 
 
 @Serializable
