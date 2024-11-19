@@ -17,6 +17,31 @@ class Get() {
     private val db = SupabaseConnection.supabase
 
     /**
+     * Запрос для получения пользователей отсутствующих по причине отпуска
+     */
+    suspend fun getEmployeeByVacation() : List<AbsenceEmployee>{
+        var employeeByVacation : List<AbsenceEmployee> = listOf()
+
+        try {
+            employeeByVacation = db
+                .from("AbsencesEmployees").select() {
+                    filter {
+                        eq("reason_id", "336e77aa-2a3b-425a-85fe-76e5f76ab0ac")
+                    }
+                }
+                .decodeList<AbsenceEmployee>()
+
+            Log.d("GetEmployeeByVacation", "SuccessFetch")
+        }
+        catch (e: Exception){
+            Log.d("ExceptionGetEmployeeByVacation", "$e")
+        }
+
+        return employeeByVacation
+    }
+
+
+    /**
      * Метод для получения пользователя по uuid
      */
     suspend fun getEmployeeById(uuid : String) : Employee?{
@@ -88,7 +113,7 @@ class Get() {
 
 
     /**
-     * Метод предназначенный для получения uuid пользователя и причины отсутствия
+     * Метод предназначенный для получения uuid пользователя и причины о-тсутствия
      */
     suspend fun getIdAbsenceEmployeesAndReasonByDate(date : LocalDate) : List<List<String>> {
 

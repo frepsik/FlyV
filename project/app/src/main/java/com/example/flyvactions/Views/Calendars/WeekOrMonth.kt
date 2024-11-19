@@ -2,7 +2,6 @@ package com.example.flyvactions.Views.Calendars
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flyvactions.ui.theme.BlueMain
-import com.example.flyvactions.ui.theme.ColorBorderDate
+import com.example.flyvactions.ui.theme.ColorBorderData
 import com.example.flyvactions.ui.theme.GreenMain
 import com.example.flyvactions.ui.theme.interFontFamily
 import java.time.LocalDate
@@ -79,9 +78,9 @@ fun CalendarWeekOrMonth(
                 },
                 modifier = Modifier.border(
                     width = if(toggledButtonIndex.intValue == index) { 0.dp } else { 1.dp },
-                    color =  if(toggledButtonIndex.intValue == index) { Color.Transparent } else { ColorBorderDate },
+                    color =  if(toggledButtonIndex.intValue == index) { Color.Transparent } else { ColorBorderData },
                     shape = RoundedCornerShape(8.dp)
-                ).height(74.dp).width(66.dp),
+                ).height(74.dp).width(67.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonColors(
                     containerColor = if(toggledButtonIndex.intValue == index) { GreenMain } else { Color.White },
