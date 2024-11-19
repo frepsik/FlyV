@@ -1,8 +1,10 @@
 package com.example.flyvactions.ViewModels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.flyvactions.Models.DataBase.Queries.Auth
 import io.github.jan.supabase.gotrue.user.UserInfo
+import kotlinx.coroutines.launch
 import java.text.DateFormatSymbols
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -22,4 +24,8 @@ class MainViewModel : ViewModel() {
     val dateEndWeek: LocalDate = dateBeginWeek.plusDays(6)
     val dayBeginWeek = dateBeginWeek.dayOfMonth
     val dayEndWeek = dateEndWeek.dayOfMonth
+
+    fun fetchEmployeesByDateAbsence(){
+        viewModelScope.launch {  }
+    }
 }
