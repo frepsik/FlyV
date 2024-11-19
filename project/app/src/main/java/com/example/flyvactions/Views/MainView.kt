@@ -1,6 +1,10 @@
 package com.example.flyvactions.Views
 
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -30,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.flyvactions.Models.Cache.ProfileCache
+import com.example.flyvactions.Models.isInternetConnection
 import com.example.flyvactions.R
 import com.example.flyvactions.ViewModels.MainViewModel
 import com.example.flyvactions.Views.Calendars.CalendarWeekOrMonth
@@ -45,9 +51,15 @@ import com.example.flyvactions.ui.theme.interFontFamily
  */
 @Composable
 fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = viewModel()){
+    val context : Context  = LocalContext.current
     LaunchedEffect(Unit){
         ProfileCache.profile.userInfo = viewModel.userInfo
-        viewModel.isVacationSoon()
+        if(isInternetConnection(context)){
+            viewModel.isVacationSoon()
+        }
+        else{
+            Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize().background(color = Color.White).padding(start = 25.dp, top = 70.dp, end = 25.dp, bottom = 70.dp),
@@ -94,8 +106,8 @@ fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = 
                day ->
                if(viewModel.selectedDate == null) {
                    viewModel.selectedDate = day
-                   viewModel.fetchEmployeesByDateAbsence(day)
 
+                   viewModel.fetchEmployeesByDateAbsence(day)
                    if(viewModel.isVacation){
                        viewModel.flagVacationSoon = false
                    }

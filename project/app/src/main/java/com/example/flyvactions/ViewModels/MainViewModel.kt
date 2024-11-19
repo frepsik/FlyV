@@ -70,8 +70,6 @@ class MainViewModel : ViewModel() {
             //Проверяем, есть ли кто то в списке по дате в зависимости от этого выводим список отсутствующих или запись, что все на месте
             flagLazyColumn = _listAEC.isNotEmpty()
             flagAdditionalText = !flagLazyColumn
-
-
         }
     }
 

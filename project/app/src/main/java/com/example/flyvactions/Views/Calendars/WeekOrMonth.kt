@@ -1,5 +1,6 @@
 package com.example.flyvactions.Views.Calendars
 
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,13 +20,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.flyvactions.Models.isInternetConnection
 import com.example.flyvactions.ui.theme.BlueMain
 import com.example.flyvactions.ui.theme.ColorBorderData
 import com.example.flyvactions.ui.theme.GreenMain
 import com.example.flyvactions.ui.theme.interFontFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -43,9 +50,10 @@ fun CalendarWeekOrMonth(
 ){
     val toggledButtonIndex = remember { mutableIntStateOf(-1) }
     val amountDaysInCalendar : Int = (endDate.dayOfMonth - beginDate.dayOfMonth) + 1
-    val flagButton = remember { mutableStateOf(false) }
+    val toggleButton = remember { mutableStateOf(false) }
     val lastButtonIndex = remember { mutableIntStateOf(-1) }
-
+    val isEnabledButton = remember { mutableStateOf(true) }
+    val context = LocalContext.current
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(28.dp)
@@ -63,18 +71,31 @@ fun CalendarWeekOrMonth(
 
             Button(
                 onClick = {
-                    if(!flagButton.value || lastButtonIndex.intValue!=index){
-                        toggledButtonIndex.intValue = index
-                        lastButtonIndex.intValue = index
-                        dateSelected(currentDate)
-                        flagButton.value = true
+                    //Интернет
+                    if(isInternetConnection(context)){
+                        if(!toggleButton.value || lastButtonIndex.intValue!=index){
+                            toggledButtonIndex.intValue = index
+                            lastButtonIndex.intValue = index
+                            dateSelected(currentDate)
+
+                            toggleButton.value = true
+                        }
+                        else{
+                            toggledButtonIndex.intValue = -1
+                            dateSelected(currentDate)
+                            toggleButton.value = false
+                        }
+
+                        //Ограничение, чтобы бесперерывно на кнопку не жали, потому что логика работы нажатия сломается и количество запросов больно сильно повысится
+                        isEnabledButton.value = false
+                        CoroutineScope(Dispatchers.Main).launch {
+                            delay(500L) // Задержка в миллисекундах
+                            isEnabledButton.value = true
+                        }
                     }
                     else{
-                        toggledButtonIndex.intValue = -1
-                        dateSelected(currentDate)
-                        flagButton.value = false
+                        Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
                     }
-
                 },
                 modifier = Modifier.border(
                     width = if(toggledButtonIndex.intValue == index) { 0.dp } else { 1.dp },
@@ -88,8 +109,10 @@ fun CalendarWeekOrMonth(
                     disabledContainerColor = if(toggledButtonIndex.intValue == index) { GreenMain } else { Color.White },
                     disabledContentColor = if(toggledButtonIndex.intValue == index) { Color.White } else { BlueMain }
                 ),
-                contentPadding = PaddingValues(0.dp)
+                contentPadding = PaddingValues(0.dp),
+                enabled = isEnabledButton.value
             ){
+                //День месяц
                 Column(
                     verticalArrangement = Arrangement.spacedBy(1.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
