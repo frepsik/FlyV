@@ -14,5 +14,6 @@ data class Employee(
     @SerialName("days_vacation") var daysVacation : Int,
     @SerialName("number_phone") var numberPhone : String,
     @SerialName("is_works") var isWorks : Boolean,
-    @SerialName("email_personal") var email : String
+    @SerialName("email_personal") var email : String?,
+    @SerialName("url_photo_profile") val urlPhotoProfile : String?
 )
