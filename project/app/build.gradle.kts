@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.0"
 
 }
 
@@ -42,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.5"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
@@ -74,11 +74,12 @@ dependencies {
     implementation(platform(libs.supabase.bom))
     implementation(libs.postgrest.kt)
     implementation(libs.realtime.kt)
-    implementation (libs.storage.kt)
+    implementation(libs.storage.kt)
 
     //Navigation
     implementation(libs.androidx.navigation.compose)
 
     //Coil
     implementation (libs.coil.compose)
+
 }

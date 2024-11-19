@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.R
 import com.example.flyvactions.ViewModels.MainViewModel
