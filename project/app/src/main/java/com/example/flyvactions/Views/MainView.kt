@@ -1,10 +1,8 @@
 package com.example.flyvactions.Views
 
-import android.widget.ImageButton
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,30 +11,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.R
 import com.example.flyvactions.ViewModels.MainViewModel
 import com.example.flyvactions.Views.Calendars.CalendarWeekOrMonth
+import com.example.flyvactions.Views.SupportingMainViews.AbsencesEmployeesLazyColumn
 import com.example.flyvactions.ui.theme.BlueMain
 import com.example.flyvactions.ui.theme.ColorTextDark
 import com.example.flyvactions.ui.theme.ColorTextLight
@@ -89,18 +87,47 @@ fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = 
                    modifier = Modifier.padding(start = 2.dp)
                )
            }
+
            //Календарь на неделю
            CalendarWeekOrMonth(viewModel.dateBeginWeek, viewModel.dateEndWeek){
-                   day -> println("${day}")
+               day ->
+               if(viewModel.selectedDate == null) {
+                   viewModel.selectedDate = day
+                   viewModel.fetchEmployeesByDateAbsence(day)
+               }
+               else if (viewModel.selectedDate == day){
+                    viewModel.selectedDate = null
+                    viewModel.clearListAEC()
+               }
+               else{
+                   viewModel.selectedDate = day
+                   viewModel.clearListAEC()
+                   viewModel.fetchEmployeesByDateAbsence(day)
+               }
            }
 
-           LazyColumn(
-               verticalArrangement = Arrangement.spacedBy(28.dp),
-               horizontalAlignment = Alignment.Start
-           ) {
-                
-            }
-
+           if(!viewModel.flagAdditionalText){
+               if(viewModel.flagLazyColumn){
+                   Log.d("listAEC", "${viewModel.listAEC}")
+                   //Функция вывода отсутствующих пользователей
+                   AbsencesEmployeesLazyColumn(viewModel.listAEC)
+               }
+           }
+           else{
+               Text(text = buildAnnotatedString {
+                   withStyle(style = SpanStyle(color = ColorTextDark)) {
+                       append("Все сотрудники ")
+                   }
+                   withStyle(style = SpanStyle(color = BlueMain)) {
+                       append("на рабочем месте")
+                   } },
+                   fontSize = 20.sp,
+                   fontFamily = interFontFamily,
+                   fontWeight = FontWeight.Medium,
+                   textAlign = TextAlign.Center,
+                   modifier = Modifier.padding(top=75.dp)
+               )
+           }
        }
     }
 }

@@ -72,6 +72,7 @@ fun CalendarWeekOrMonth(
                     }
                     else{
                         toggledButtonIndex.intValue = -1
+                        dateSelected(currentDate)
                         flagButton.value = false
                     }
 

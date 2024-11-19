@@ -15,7 +15,8 @@ object ProfileCache {
         daysOff = 0,
         daysVacation = 0,
         daysVacationPlanned = null,
-        daysVacationForExperience = 0
+        daysVacationForExperience = 0,
+        urlPhotoProfile = null
     )
 
     data class UserProfile(
@@ -27,6 +28,7 @@ object ProfileCache {
         var daysOff: Int,
         var daysVacation : Int,
         var daysVacationPlanned : Int?,
-        var daysVacationForExperience : Int
+        var daysVacationForExperience : Int,
+        val urlPhotoProfile : String?
     )
 }
