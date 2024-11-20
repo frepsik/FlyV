@@ -1,6 +1,5 @@
-package com.example.flyvactions.Models.DataClasses
+package com.example.flyvactions.Models.Cache
 
-import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.Models.Cache.ProfileCache.UserProfile
 
 /**

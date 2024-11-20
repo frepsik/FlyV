@@ -17,4 +17,7 @@ class ProfileViewModel : ViewModel() {
     val email by mutableStateOf(ProfileCache.profile.email)
     val city by mutableStateOf(ProfileCache.profile.city)
 
+    var isEnabledBack by mutableStateOf(false)
+    var isEnabledExit by mutableStateOf(false)
+
 }

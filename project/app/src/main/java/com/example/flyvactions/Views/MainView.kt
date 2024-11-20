@@ -57,6 +57,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = viewModel()){
     val context = LocalContext.current
+
     LaunchedEffect(Unit){
         if(ProfileCache.profile.userInfo == null){
             ProfileCache.profile.userInfo = viewModel.userInfo
@@ -113,6 +114,12 @@ fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = 
 
                                navHostController.navigate("profileView"){
                                    launchSingleTop = true
+                               }
+
+                               viewModel.isEnabledProfile = false
+                               CoroutineScope(Dispatchers.Main).launch {
+                                   delay(1000)
+                                   viewModel.isEnabledProfile = true
                                }
                            }
                        }

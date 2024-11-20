@@ -23,6 +23,8 @@ import java.time.format.DateTimeFormatter
  * Бизнес-логика главного окна (MainView)
  */
 class MainViewModel : ViewModel() {
+
+
     private var auth : Auth = Auth()
     private var get : Get = Get()
 
@@ -67,6 +69,8 @@ class MainViewModel : ViewModel() {
 
     var urlProfile by mutableStateOf("")
     var isEnabledProfile by mutableStateOf(true)
+
+    var isFlow by mutableStateOf(true)
 
     /**
      * Метод для вызова функций из Models, с запросами к базе на получение пользователей, отсуствующих в определённую дату по определённой причине
