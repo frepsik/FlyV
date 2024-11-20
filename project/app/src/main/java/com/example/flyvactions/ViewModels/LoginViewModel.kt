@@ -9,10 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flyvactions.Models.BaseState
 import com.example.flyvactions.Models.DataBase.Queries.Auth
-import com.example.flyvactions.Models.DataBase.Queries.Get
 import kotlinx.coroutines.launch
 
-//Viewmodel окна LoginView
+/**
+ * Бизнес-логика она входа (LoginView)
+ */
 class LoginViewModel:ViewModel() {
     //Свойства для полей ввода почты и пароля
     var emailUser by mutableStateOf("")

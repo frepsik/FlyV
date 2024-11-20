@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.Views.LoginScreen
 import com.example.flyvactions.Views.MainScreen
+import com.example.flyvactions.Views.ProfileScreen
 import io.github.jan.supabase.gotrue.user.UserInfo
 
 //Навигация приложения
@@ -17,7 +18,7 @@ fun Navigate(){
 
     val user : UserInfo? = ProfileCache.profile?.userInfo
 
-    Log.d("ЕБУЧЕЕ СОЕДИНЕНИЕ","${user}")
+    Log.d("GetUserAfterExistsApp","${user}")
     val startDestination : String = if(user!= null) {"mainView"}  else {"loginView"}
 
     val navController:NavHostController = rememberNavController()
@@ -29,6 +30,10 @@ fun Navigate(){
 
         composable(route = "mainView"){
             MainScreen(navController)
+        }
+
+        composable(route = "profileView"){
+            ProfileScreen(navController)
         }
     }
 }

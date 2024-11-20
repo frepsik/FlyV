@@ -2,6 +2,7 @@ package com.example.flyvactions.Models.DataBase.Queries
 
 import android.util.Log
 import com.example.flyvactions.Models.DataBase.Entities.AbsenceEmployee
+import com.example.flyvactions.Models.DataBase.Entities.City
 import com.example.flyvactions.Models.DataBase.Entities.Employee
 import com.example.flyvactions.Models.DataBase.Entities.ReasonAbsence
 import com.example.flyvactions.Models.DataBase.SupabaseConnection
@@ -10,39 +11,40 @@ import com.example.flyvactions.Models.WorkWithString.convertStringToLocalDate
 import com.example.flyvactions.Models.WorkWithString.parseFullNameEmployee
 import com.example.flyvactions.Models.dateBetweenBeginDateAndEndDate
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Columns
 import java.time.LocalDate
 
 
 class Get() {
     private val db = SupabaseConnection.supabase
 
+
     /**
-     * Запрос для получения пользователей отсутствующих по причине отпуска
+     * Запрос на получение названия города по uuid
      */
-    suspend fun getEmployeeByVacation() : List<AbsenceEmployee>{
-        var employeeByVacation : List<AbsenceEmployee> = listOf()
+    suspend fun getCityById(uuid : String) : City?{
 
+        var city : City? = null
         try {
-            employeeByVacation = db
-                .from("AbsencesEmployees").select() {
+            city = db
+                .from("Cities")
+                .select(){
                     filter {
-                        eq("reason_id", "336e77aa-2a3b-425a-85fe-76e5f76ab0ac")
+                        eq("id", uuid)
                     }
-                }
-                .decodeList<AbsenceEmployee>()
-
-            Log.d("GetEmployeeByVacation", "SuccessFetch")
+                }.decodeSingle()
+            Log.d("GetCityById", "SuccessFetch")
         }
-        catch (e: Exception){
-            Log.d("ExceptionGetEmployeeByVacation", "$e")
+        catch (e : Exception){
+            Log.d("ExceptionGetCityById", "$e")
         }
 
-        return employeeByVacation
+        return city
     }
 
 
     /**
-     * Метод для получения пользователя по uuid
+     * Запрос для получения пользователя по uuid
      */
     suspend fun getEmployeeById(uuid : String) : Employee?{
         var employee : Employee? = null
@@ -57,6 +59,7 @@ class Get() {
                     }
                 }.decodeSingle<Employee>()
 
+            employee.urlPhotoProfile ?:"https://lpdnebdhpgflnqtlksnj.supabase.co/storage/v1/object/public/photosProfileUsers/UnnamedProfile.jpg"
             Log.d("GetEmployeeById", "SuccessFetch")
         }
         catch (e:Exception){
@@ -66,9 +69,8 @@ class Get() {
         return employee
     }
 
-
     /**
-     * Меттод для получения причины отсутствия по uuid
+     * Запрос для получения причины отсутствия по uuid
      */
     suspend fun getReasonById(uuid : String) : ReasonAbsence?{
         var reason : ReasonAbsence? = null
@@ -94,7 +96,31 @@ class Get() {
 
 
     /**
-     * Метод получения всех отсутствующих пользователей и причины отсутствия
+     * Запрос для получения пользователей отсутствующих по причине отпуска
+     */
+    suspend fun getEmployeeByVacation() : List<AbsenceEmployee>{
+        var employeeByVacation : List<AbsenceEmployee> = listOf()
+
+        try {
+            employeeByVacation = db
+                .from("AbsencesEmployees").select() {
+                    filter {
+                        eq("reason_id", "336e77aa-2a3b-425a-85fe-76e5f76ab0ac")
+                    }
+                }
+                .decodeList<AbsenceEmployee>()
+            Log.d("GetEmployeeByVacation", "SuccessFetch")
+        }
+        catch (e: Exception){
+            Log.d("ExceptionGetEmployeeByVacation", "$e")
+        }
+
+        return employeeByVacation
+    }
+
+
+    /**
+     * Запрос для получения всех отсутствующих пользователей и причины отсутствия
      */
     suspend fun getAbsenceEmployees() : List<AbsenceEmployee>?{
         var listAbsenceEmployees : List<AbsenceEmployee>?= null
@@ -113,7 +139,7 @@ class Get() {
 
 
     /**
-     * Метод предназначенный для получения uuid пользователя и причины о-тсутствия
+     * Запрос предназначенный для получения uuid пользователя и причины о-тсутствия
      */
     suspend fun getIdAbsenceEmployeesAndReasonByDate(date : LocalDate) : List<List<String>> {
 
@@ -142,7 +168,7 @@ class Get() {
 
 
     /**
-     * Метод позволяющий получить список отсутствующих и причину под вывод в рамках требования приложения
+     * Запрос позволяющий получить список отсутствующих и причину под вывод в рамках требования приложения
      */
     suspend fun getAbsenceEmployeesCalendarByDate(date : LocalDate) : MutableList<AbsenceEmployeeCalendar>{
 

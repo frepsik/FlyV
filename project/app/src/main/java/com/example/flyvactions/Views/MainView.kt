@@ -1,11 +1,10 @@
 package com.example.flyvactions.Views
 
-import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,12 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.Models.isInternetConnection
 import com.example.flyvactions.R
@@ -43,24 +45,33 @@ import com.example.flyvactions.Views.SupportingMainViews.AbsencesEmployeesLazyCo
 import com.example.flyvactions.ui.theme.BlueMain
 import com.example.flyvactions.ui.theme.ColorTextDark
 import com.example.flyvactions.ui.theme.ColorTextLight
-import com.example.flyvactions.ui.theme.ColorUnnamedProfile
 import com.example.flyvactions.ui.theme.interFontFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Главная мобильного приложения
  */
 @Composable
 fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = viewModel()){
-    val context : Context  = LocalContext.current
+    val context = LocalContext.current
     LaunchedEffect(Unit){
-        ProfileCache.profile.userInfo = viewModel.userInfo
-        if(isInternetConnection(context)){
-            viewModel.isVacationSoon()
+        if(ProfileCache.profile.userInfo == null){
+            ProfileCache.profile.userInfo = viewModel.userInfo
+            viewModel.urlProfile = "https://lpdnebdhpgflnqtlksnj.supabase.co/storage/v1/object/public/photosProfileUsers/UnnamedProfile.jpg"
+        }
+        if(ProfileCache.profile.fullName.isEmpty()){
+            Log.d("GetUser", "Exists")
+            viewModel.getUser()
         }
         else{
-            Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
+            viewModel.urlProfile = ProfileCache.profile.urlPhotoProfile!!
         }
+        viewModel.isVacationSoon()
     }
+
 
     Column(modifier = Modifier.fillMaxSize().background(color = Color.White).padding(start = 25.dp, top = 70.dp, end = 25.dp, bottom = 70.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -76,8 +87,36 @@ fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = 
            ) {
                Icon(imageVector = ImageVector.vectorResource(id = R.drawable.burger), contentDescription = "",
                    Modifier.size(23.dp), tint = BlueMain)
-               Icon(imageVector = ImageVector.vectorResource(id = R.drawable.profile), contentDescription = "",
-                   Modifier.size(65.dp), tint = ColorUnnamedProfile)
+
+               AsyncImage(
+                   model = viewModel.urlProfile,
+                   contentDescription = "imageProfile",
+                   modifier = Modifier
+                       .size(65.dp)
+                       .clip(CircleShape)
+                       .border(1.dp, BlueMain, CircleShape)
+                       .clickable(
+                           enabled = viewModel.isEnabledProfile
+                       ) {
+                           if (!isInternetConnection(context)){
+                               Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
+                               viewModel.isEnabledProfile = false
+                               CoroutineScope(Dispatchers.Main).launch {
+                                   delay(60000)
+                                   viewModel.isEnabledProfile = true
+                               }
+                           }
+                           else{
+                               //Очищаем данные под вывод (Чтобы при возвращении на экране не было данных, что не должно быть)
+                               viewModel.selectedDate = null
+                               viewModel.clearListAEC()
+
+                               navHostController.navigate("profileView"){
+                                   launchSingleTop = true
+                               }
+                           }
+                       }
+               )
            }
 
            //Текущая неделя, месяц, дни

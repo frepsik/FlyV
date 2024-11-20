@@ -8,24 +8,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.Models.DataBase.Entities.AbsenceEmployee
+import com.example.flyvactions.Models.DataBase.Entities.Employee
 import com.example.flyvactions.Models.DataBase.Queries.Auth
 import com.example.flyvactions.Models.DataBase.Queries.Get
 import com.example.flyvactions.Models.DataClasses.AbsenceEmployeeCalendar
 import com.example.flyvactions.Models.WorkWithString.convertStringToLocalDate
+import com.example.flyvactions.Models.WorkWithString.parseFullNameEmployee
 import io.github.jan.supabase.gotrue.user.UserInfo
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
+/**
+ * Бизнес-логика главного окна (MainView)
+ */
 class MainViewModel : ViewModel() {
     private var auth : Auth = Auth()
     private var get : Get = Get()
+
+    val userInfo : UserInfo? = auth.authorizedUser()
 
     var selectedDate by mutableStateOf<LocalDate?>(null)
 
     private var _listAEC : MutableList<AbsenceEmployeeCalendar> = mutableListOf()
     val listAEC : MutableList<AbsenceEmployeeCalendar> = _listAEC
+
 
     var flagLazyColumn by mutableStateOf(false)
     var flagAdditionalText by mutableStateOf(false)
@@ -37,13 +44,11 @@ class MainViewModel : ViewModel() {
     var flagEndVacation by mutableStateOf(false)
 
 
-    val userInfo : UserInfo? = auth.authorizedUser()
 
     private val months = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
         "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
 
-
-    private val outputFormatter = DateTimeFormatter.ofPattern("dd.MM")
+    //Определяем нынешний месяц и текущую неделю (начало и конец)
     private val currentDate : LocalDate = LocalDate.now()
     val month: String = months[currentDate.monthValue - 1]
     val dateBeginWeek: LocalDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
@@ -51,10 +56,17 @@ class MainViewModel : ViewModel() {
     val dayBeginWeek = dateBeginWeek.dayOfMonth
     val dayEndWeek = dateEndWeek.dayOfMonth
 
+    private val outputFormatter = DateTimeFormatter.ofPattern("dd.MM")
 
     private var listAbsencesEmployees : List<AbsenceEmployee> = listOf()
     var messageSoonVacation : String by mutableStateOf("")
     var messageEndVacation : String by mutableStateOf("")
+
+
+    private var employee : Employee? = null
+
+    var urlProfile by mutableStateOf("")
+    var isEnabledProfile by mutableStateOf(true)
 
     /**
      * Метод для вызова функций из Models, с запросами к базе на получение пользователей, отсуствующих в определённую дату по определённой причине
@@ -84,7 +96,7 @@ class MainViewModel : ViewModel() {
     }
 
     /**
-     * Метод для определения, осталось ли 3 дня до отпуска вошедшего пользователя
+     * Метод для определения, осталось ли (3, 2, 1) дня до отпуска вошедшего пользователя
      */
     fun isVacationSoon(){
         viewModelScope.launch {
@@ -114,6 +126,27 @@ class MainViewModel : ViewModel() {
                         messageEndVacation = convertStringToLocalDate(it.beginDate).plusDays(it.amountDay.toLong()-1).format(outputFormatter)
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Метод для получения пользователя, при запуске приложения (во время навигации не будет срабатывать)
+     */
+    fun getUser(){
+        viewModelScope.launch {
+            employee = get.getEmployeeById(ProfileCache.profile.userInfo!!.id)
+            val cityName : String = get.getCityById(employee!!.cityId)!!.city
+            urlProfile = employee!!.urlPhotoProfile ?: "https://lpdnebdhpgflnqtlksnj.supabase.co/storage/v1/object/public/photosProfileUsers/UnnamedProfile.jpg"
+            with(ProfileCache.profile){
+                urlPhotoProfile = employee?.urlPhotoProfile
+                city = cityName
+                fullName = parseFullNameEmployee(employee!!.fullName)
+                numberPhone = employee!!.numberPhone
+                email = employee!!.email ?: "-"
+                daysOff = employee!!.daysOff
+                daysVacation = employee!!.daysVacation
+                hireDate = convertStringToLocalDate(employee!!.hireDate)
             }
         }
     }
