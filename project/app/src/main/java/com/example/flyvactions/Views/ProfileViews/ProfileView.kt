@@ -1,5 +1,6 @@
-package com.example.flyvactions.Views
+package com.example.flyvactions.Views.ProfileViews
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,12 +34,10 @@ import com.example.flyvactions.Models.Cache.clearProfileCache
 import com.example.flyvactions.R
 import com.example.flyvactions.ViewModels.ProfileViewModel
 import com.example.flyvactions.ui.theme.BlueMain
-import com.example.flyvactions.ui.theme.ColorBackground
 import com.example.flyvactions.ui.theme.ColorBorderData
 import com.example.flyvactions.ui.theme.ColorTextDark
 import com.example.flyvactions.ui.theme.ColorTextLight
 import com.example.flyvactions.ui.theme.interFontFamily
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -51,6 +50,9 @@ fun ProfileScreen(navHostController: NavHostController, viewModel: ProfileViewMo
         delay(800)
         viewModel.isEnabledBack = true
         viewModel.isEnabledExit = true
+
+        viewModel.refreshData()
+        Log.d("Update", "Success")
     }
 
     Column(
@@ -216,7 +218,7 @@ fun ProfileScreen(navHostController: NavHostController, viewModel: ProfileViewMo
                         fontFamily = interFontFamily,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.clickable{
-                            //Пока ничего
+                            navHostController.navigate("editProfileView")
                         }
 
                     )

@@ -7,6 +7,9 @@ import io.github.jan.supabase.gotrue.providers.builtin.Email
 import io.github.jan.supabase.gotrue.user.UserInfo
 import io.github.jan.supabase.gotrue.user.UserSession
 
+/**
+ * Класс содержащий функционал связанный с аутентификацией
+ */
 class Auth {
     private val db = SupabaseConnection.supabase
 

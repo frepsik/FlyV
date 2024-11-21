@@ -10,23 +10,27 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.Views.LoginScreen
 import com.example.flyvactions.Views.MainScreen
-import com.example.flyvactions.Views.ProfileScreen
+import com.example.flyvactions.Views.ProfileViews.EditProfileScreen
+import com.example.flyvactions.Views.ProfileViews.ProfileScreen
 import io.github.jan.supabase.gotrue.user.UserInfo
 
 //Навигация приложения
 @Composable
 fun Navigate(){
 
-    val user : UserInfo? = ProfileCache.profile?.userInfo
+    val user : UserInfo? = ProfileCache.profile.userInfo
 
     Log.d("GetUserAfterExistsApp","${user}")
     val startDestination : String = if(user!= null) {"mainView"}  else {"loginView"}
 
     val navController:NavHostController = rememberNavController()
+
     NavHost(navController = navController, startDestination = startDestination){
+
 
         composable(route = "loginView"){
             LoginScreen(navController)
@@ -45,9 +49,44 @@ fun Navigate(){
             MainScreen(navController)
         }
 
+        //Здесь ещё в аргументе передаем необходимое значение,
+        // чтобы определить с какого окна приходим и отобразить нужную анимацию
         composable(
-            route = "profileView",
-            //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна mainView)
+            route = "profileView?from={from}",
+            arguments = listOf(navArgument("from"){ defaultValue = "mainView" }),
+
+            //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна mainView, editProfileView (уже не уверен, странно работает))
+            enterTransition = {
+                fadeIn(animationSpec = tween(600)) + slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        tween(600))
+            },
+            //Срабатывает когда я через navigate перехожу на другое окно
+            exitTransition = {
+                fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    tween(600)
+                )
+            },
+            //Срабатывает когда я выхожу с окна использовав popBackStack (свайп или кнопка на сенсоре телефона)
+            popExitTransition = {
+                fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    tween(600)
+                )
+            },
+            popEnterTransition = {
+                fadeIn(animationSpec = tween(600)) + slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    tween(600))
+            }
+        ){
+            ProfileScreen(navController)
+        }
+
+        composable(
+            "editProfileView",
+            //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна profileView)
             enterTransition = {
                 fadeIn(animationSpec = tween(600)) + slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Left,
@@ -68,7 +107,7 @@ fun Navigate(){
                 )
             }
         ){
-            ProfileScreen(navController)
+            EditProfileScreen(navController)
         }
     }
 }

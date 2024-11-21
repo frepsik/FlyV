@@ -14,10 +14,28 @@ import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import java.time.LocalDate
 
-
+/**
+ * Класс содержащий запросы на получение данных из базы
+ */
 class Get() {
     private val db = SupabaseConnection.supabase
 
+    /**
+     * Запрос на получение всех городов
+     */
+    suspend fun getCityList() : MutableList<City> {
+        var listCity = listOf<City>()
+        var mutableListCity = mutableListOf<City>()
+        try {
+            listCity = db.from("Cities").select().decodeList<City>()
+            mutableListCity = listCity.toMutableList()
+            Log.d("GetCityList", "SuccessFetch")
+        }
+        catch (e: Exception){
+            Log.d("ExceptionGetCityList", "${e}")
+        }
+        return mutableListCity
+    }
 
     /**
      * Запрос на получение названия города по uuid
