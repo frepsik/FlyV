@@ -2,13 +2,7 @@ package com.example.flyvactions.Models.Cache
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.example.flyvactions.Models.DataBase.Queries.Auth
-import io.github.jan.supabase.gotrue.user.UserInfo
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 

@@ -35,7 +35,7 @@ class SessionLifeCycleTracking(private val context: Context) : DefaultLifecycleO
             Log.d("Восстановление сессии","то что надо")
             Log.d("USER", "$${ProfileCache.profile.userInfo}  ${ProfileCache.profile}")
         }
-        Log.d("Создание сессии", "По итогу всё равно создаём на основе прошлой или только новую")
+        Log.d("Создание сессии", "По итогу всё равно создаём на основе прошлой или только новую (если нечего было восстанавливать и recoverSession вернул false)")
     }
 
     /**
@@ -48,6 +48,11 @@ class SessionLifeCycleTracking(private val context: Context) : DefaultLifecycleO
             saveBackgroundTime(backgroundTime!!, context)
             saveSession(auth, context)
             Log.d("Сохранение данных", "Те что надо")
+        }
+        else{
+            //Если userInfo пустой, тогда очищаем сессию (вышли из профиля или вообще не заходили)
+            deleteSharedPreferencesByName(context, "auth")
+            deleteSharedPreferencesByName(context, "startTime")
         }
     }
 }

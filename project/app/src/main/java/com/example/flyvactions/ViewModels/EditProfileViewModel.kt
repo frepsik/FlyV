@@ -11,6 +11,9 @@ import com.example.flyvactions.Models.DataBase.Queries.Get
 import com.example.flyvactions.Models.DataBase.Queries.Update
 import kotlinx.coroutines.launch
 
+/**
+ * Бизнес-логика окна редактирования пользовательских данных (EditProfileView)
+ */
 class EditProfileViewModel : ViewModel() {
     private var get : Get = Get()
     private var update : Update = Update()
