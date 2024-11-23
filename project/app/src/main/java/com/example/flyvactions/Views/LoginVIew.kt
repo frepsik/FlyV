@@ -49,7 +49,9 @@ import com.example.flyvactions.ui.theme.ColorTextLight
 import com.example.flyvactions.ui.theme.interFontFamily
 
 
-//Окно LoginView
+/**
+ * Окно авторизации LoginView
+ */
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
     val focusManager = LocalFocusManager.current

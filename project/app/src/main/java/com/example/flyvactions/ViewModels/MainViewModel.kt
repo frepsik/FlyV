@@ -52,6 +52,7 @@ class MainViewModel : ViewModel() {
 
     //Определяем нынешний месяц и текущую неделю (начало и конец)
     private val currentDate : LocalDate = LocalDate.now()
+
     val month: String = months[currentDate.monthValue - 1]
     val dateBeginWeek: LocalDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
     val dateEndWeek: LocalDate = dateBeginWeek.plusDays(6)
@@ -70,7 +71,6 @@ class MainViewModel : ViewModel() {
     var urlProfile by mutableStateOf("")
     var isEnabledProfile by mutableStateOf(true)
 
-    var isFlow by mutableStateOf(true)
 
     /**
      * Метод для вызова функций из Models, с запросами к базе на получение пользователей, отсуствующих в определённую дату по определённой причине
@@ -107,27 +107,29 @@ class MainViewModel : ViewModel() {
             listAbsencesEmployees = get.getEmployeeByVacation()
 
             listAbsencesEmployees.forEach{
+
                 if(it.employeeId == ProfileCache.profile.userInfo?.id){
-                    if(convertStringToLocalDate(it.beginDate).dayOfMonth - currentDate.dayOfMonth == 3){
+                    if(convertStringToLocalDate(it.beginDate).dayOfYear - currentDate.dayOfYear == 3){
                         isVacation = true
                         messageSoonVacation = "3 дня"
                         flagVacationSoon = true
                     }
-                    else if(convertStringToLocalDate(it.beginDate).dayOfMonth - currentDate.dayOfMonth == 2){
+                    else if(convertStringToLocalDate(it.beginDate).dayOfYear - currentDate.dayOfYear == 2){
                         isVacation = true
                         messageSoonVacation = "2 дня"
                         flagVacationSoon = true
                     }
-                    else if(convertStringToLocalDate(it.beginDate).dayOfMonth - currentDate.dayOfMonth == 1){
+                    else if(convertStringToLocalDate(it.beginDate).dayOfYear - currentDate.dayOfYear == 1){
                         isVacation = true
                         messageSoonVacation = "1 день"
                         flagVacationSoon = true
                     }
-                    else if(currentDate.dayOfMonth in
-                        convertStringToLocalDate(it.beginDate).dayOfMonth..convertStringToLocalDate(it.beginDate).plusDays(it.amountDay.toLong()-1).dayOfMonth){
+                    else if(currentDate.dayOfYear in
+                        convertStringToLocalDate(it.beginDate).dayOfYear..convertStringToLocalDate(it.beginDate).plusDays(it.amountDay.toLong()-1).dayOfYear){
                         isVacationEnd = true
                         flagEndVacation = true
                         messageEndVacation = convertStringToLocalDate(it.beginDate).plusDays(it.amountDay.toLong()-1).format(outputFormatter)
+
                     }
                 }
             }

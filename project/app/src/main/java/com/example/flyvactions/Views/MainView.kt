@@ -255,7 +255,7 @@ fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = 
                                    append("нужно отдыхать. ")
                                }
                                withStyle(style = SpanStyle(color = ColorTextDark)) {
-                                   append("Конец только - ${viewModel.messageEndVacation}")}
+                                   append("Конец отпуска - ${viewModel.messageEndVacation}")}
 
                                },
                                fontSize = 18.sp,

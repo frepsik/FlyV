@@ -1,4 +1,4 @@
-package com.example.flyvactions.ViewModels
+package com.example.flyvactions.ViewModels.ProfileViewModels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import com.example.flyvactions.ui.theme.BlueMain
 import com.example.flyvactions.ui.theme.ColorBackground
 
-//Кружок загрузки, что накладывается на экран
+/**
+ * Кружок загрузки, что накладывается на экран
+ */
 @Composable
 fun LoadingCircle(){
     Box(

@@ -12,7 +12,7 @@ import com.example.flyvactions.Models.DataBase.Queries.Auth
 import kotlinx.coroutines.launch
 
 /**
- * Бизнес-логика она входа (LoginView)
+ * Бизнес-логика окна авторизации (LoginView)
  */
 class LoginViewModel:ViewModel() {
     //Свойства для полей ввода почты и пароля

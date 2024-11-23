@@ -21,6 +21,53 @@ class Get() {
     private val db = SupabaseConnection.supabase
 
     /**
+     * Запрос на получение uuid причины отсутствия по названию
+     */
+    suspend fun getReasonAbsenceByName(name: String) : ReasonAbsence?{
+        var uuidReason : ReasonAbsence? = null
+        try {
+            uuidReason = db
+                .from("ReasonsAbsences")
+                .select{
+                    filter {
+                        eq("reason", name)
+                    }
+                }
+                .decodeSingle<ReasonAbsence>()
+            Log.d("GetReasonAbsenceByName","FetchSuccess")
+        }
+        catch (e: Exception){
+            Log.d("ExceptionGetReasonAbsenceByName", "$e")
+        }
+        return uuidReason
+    }
+
+
+    /**
+     * Запрос на получение отсутствий пользователя по его uuid и uuid причины
+     */
+    suspend fun getAbsencesEmployeesByIdUserAndReasonId(idUser : String, idReason: String) : List<AbsenceEmployee>{
+        var listAbsenceEmployee = listOf<AbsenceEmployee>()
+        try {
+            listAbsenceEmployee = db
+                .from("AbsencesEmployees")
+                .select(){
+                    filter {
+                        eq("reason_id", idReason)
+                        eq("employee_id", idUser)
+                    }
+                }
+                .decodeList<AbsenceEmployee>()
+            Log.d("GetAbsencesEmployeesByIdUserAndReasonId", "SuccessFetch")
+        }
+        catch (e : Exception){
+            Log.d("ExceptionGetAbsencesEmployeesByIdUserAndAbsencesId", "$e")
+        }
+        return listAbsenceEmployee
+    }
+
+
+    /**
      * Запрос на получение всех городов
      */
     suspend fun getCityList() : MutableList<City> {

@@ -1,4 +1,4 @@
-package com.example.flyvactions.ViewModels
+package com.example.flyvactions.ViewModels.ProfileViewModels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +20,7 @@ class ProfileViewModel : ViewModel() {
     var isEnabledBack by mutableStateOf(false)
     var isEnabledExit by mutableStateOf(false)
 
+    var isShowCardBalanceHoliday by mutableStateOf(false)
 
     /**
      * Обновление данных если они изменились
