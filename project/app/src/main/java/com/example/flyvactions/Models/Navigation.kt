@@ -137,13 +137,10 @@ fun Navigate(){
                 EditProfileScreen(navController)
             }
 
+            //Календарь
             composable(
                 route = "calendarView",
 
-            )
-            { CalendarScreen() }
-            composable(
-                route = "vacationView",
                 //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна profileView)
                 enterTransition = {
                     fadeIn(animationSpec = tween(600)) + slideIntoContainer(
@@ -164,6 +161,12 @@ fun Navigate(){
                         tween(600)
                     )
                 }
+            )
+            { CalendarScreen() }
+
+            //Отпуск
+            composable(
+                route = "vacationView"
             ) { VacationScreen() }
             composable(
                 route = "daysOffView",
@@ -187,6 +190,8 @@ fun Navigate(){
                     )
                 }
             ){ DaysOffScreen() }
+
+            //Больничный
             composable(
                 route = "medicalView",
                 enterTransition = {
@@ -209,6 +214,8 @@ fun Navigate(){
                     )
                 }
             ){ MedicalScreen() }
+
+            //Командировка
             composable(
                 route = "businessTripView",
                 //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна profileView)
