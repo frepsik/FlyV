@@ -49,7 +49,7 @@ fun CalendarWeekOrMonth(
     dateSelected : (LocalDate) -> Unit
 ){
     val toggledButtonIndex = remember { mutableIntStateOf(-1) }
-    val amountDaysInCalendar : Int = (endDate.dayOfMonth - beginDate.dayOfMonth) + 1
+    val amountDaysInCalendar : Int = (endDate.dayOfYear - beginDate.dayOfYear) + 1
     val toggleButton = remember { mutableStateOf(false) }
     val lastButtonIndex = remember { mutableIntStateOf(-1) }
     val isEnabledButton = remember { mutableStateOf(true) }

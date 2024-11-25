@@ -53,12 +53,12 @@ class MainViewModel : ViewModel() {
     //Определяем нынешний месяц и текущую неделю (начало и конец)
     private val currentDate : LocalDate = LocalDate.now()
 
-    val month: String = months[currentDate.monthValue - 1]
     val dateBeginWeek: LocalDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
     val dateEndWeek: LocalDate = dateBeginWeek.plusDays(6)
     val dayBeginWeek = dateBeginWeek.dayOfMonth
     val dayEndWeek = dateEndWeek.dayOfMonth
-
+    val monthSecond = if(dateEndWeek.dayOfMonth >= 1) {"${months[dateEndWeek.monthValue-1]}"} else { "" }
+    val month: String = if(monthSecond.isEmpty()) {months[currentDate.monthValue - 1]} else {"${months[currentDate.monthValue - 1]} - ${monthSecond.lowercase()}"}
     private val outputFormatter = DateTimeFormatter.ofPattern("dd.MM")
 
     private var listAbsencesEmployees : List<AbsenceEmployee> = listOf()

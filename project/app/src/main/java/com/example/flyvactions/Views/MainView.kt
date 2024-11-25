@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,7 +56,12 @@ import kotlinx.coroutines.launch
  * Главная мобильного приложения
  */
 @Composable
-fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = viewModel()){
+fun MainScreen(
+    navHostController: NavHostController,
+    drawerState: DrawerState,
+    coroutineScope: CoroutineScope,
+    viewModel: MainViewModel = viewModel()
+){
     val context = LocalContext.current
 
     LaunchedEffect(Unit){
@@ -86,8 +92,17 @@ fun MainScreen(navHostController: NavHostController, viewModel: MainViewModel = 
                horizontalArrangement = Arrangement.SpaceBetween,
                verticalAlignment = Alignment.CenterVertically
            ) {
-               Icon(imageVector = ImageVector.vectorResource(id = R.drawable.burger), contentDescription = "",
-                   Modifier.size(23.dp), tint = BlueMain)
+               Icon(
+                   imageVector = ImageVector.vectorResource(id = R.drawable.burger),
+                   contentDescription = "",
+                   Modifier
+                       .size(23.dp)
+                       .clickable {
+                           coroutineScope.launch {
+                               drawerState.open()
+                           }
+                       }, tint = BlueMain
+               )
 
                AsyncImage(
                    model = viewModel.urlProfile,
