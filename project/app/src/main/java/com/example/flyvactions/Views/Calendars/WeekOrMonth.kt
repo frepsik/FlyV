@@ -50,10 +50,8 @@ fun CalendarWeekOrMonth(
     selectedDate : MutableState<LocalDate?>,
     dateSelectedCallback : (LocalDate) -> Unit
 ){
-    val toggledButtonIndex = remember { mutableIntStateOf(-1) }
+    val selectedDateInFunc = remember { mutableStateOf<LocalDate?>(null) }
     val amountDaysInCalendar : Int = (endDate.dayOfYear - beginDate.dayOfYear) + 1
-    val toggleButton = remember { mutableStateOf(false) }
-    val lastButtonIndex = remember { mutableIntStateOf(-1) }
     val isEnabledButton = remember { mutableStateOf(true) }
     val context = LocalContext.current
 
@@ -73,22 +71,23 @@ fun CalendarWeekOrMonth(
                     Locale("ru")
                 ).replaceFirstChar { it.uppercase() }
 
+            val isSelected = when(currentDate){
+                selectedDateInFunc.value -> true
+                else -> false
+            }
+
             Button(
                 onClick = {
                     //Интернет
                     if(isInternetConnection(context)){
-                        if(!toggleButton.value || lastButtonIndex.intValue!=index){
-                            toggledButtonIndex.intValue = index
-                            lastButtonIndex.intValue = index
+                        if(selectedDateInFunc.value != currentDate ){
                             selectedDate.value = currentDate
+                            selectedDateInFunc.value = currentDate
                             dateSelectedCallback(currentDate)
-                            toggleButton.value = true
                         }
                         else{
-                            toggledButtonIndex.intValue = -1
-                            selectedDate.value = null
+                            selectedDateInFunc.value = null
                             dateSelectedCallback(currentDate)
-                            toggleButton.value = false
                         }
 
                         //Ограничение, чтобы бесперерывно на кнопку не жали, потому что логика работы нажатия сломается и количество запросов больно сильно повысится
@@ -103,16 +102,16 @@ fun CalendarWeekOrMonth(
                     }
                 },
                 modifier = Modifier.border(
-                    width = if(toggledButtonIndex.intValue == index) { 0.dp } else { 1.dp },
-                    color =  if(toggledButtonIndex.intValue == index) { Color.Transparent } else { ColorBorderData },
+                    width = if(isSelected) { 0.dp } else { 1.dp },
+                    color =  if(isSelected) { Color.Transparent } else { ColorBorderData },
                     shape = RoundedCornerShape(8.dp)
                 ).height(74.dp).width(67.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonColors(
-                    containerColor = if(toggledButtonIndex.intValue == index) { GreenMain } else { Color.White },
-                    contentColor = if(toggledButtonIndex.intValue == index) { Color.White } else { BlueMain },
-                    disabledContainerColor = if(toggledButtonIndex.intValue == index) { GreenMain } else { Color.White },
-                    disabledContentColor = if(toggledButtonIndex.intValue == index) { Color.White } else { BlueMain }
+                    containerColor = if(isSelected) { GreenMain } else { Color.White },
+                    contentColor = if(isSelected) { Color.White } else { BlueMain },
+                    disabledContainerColor = if(isSelected) { GreenMain } else { Color.White },
+                    disabledContentColor = if(isSelected) { Color.White } else { BlueMain }
                 ),
                 contentPadding = PaddingValues(0.dp),
                 enabled = isEnabledButton.value

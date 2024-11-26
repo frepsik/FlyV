@@ -31,7 +31,6 @@ import com.example.flyvactions.ui.theme.ColorBorderData
 import com.example.flyvactions.ui.theme.ColorTextLight
 import com.example.flyvactions.ui.theme.GreenMain
 import com.example.flyvactions.ui.theme.interFontFamily
-import io.github.jan.supabase.realtime.Column
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -63,6 +62,8 @@ fun CalendarForVacation(
     val lastButtonIndexSecond = remember { mutableIntStateOf(-1) }
     val isEnabledButton = remember { mutableStateOf(true) }
     val context = LocalContext.current
+
+
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ){
@@ -86,6 +87,16 @@ fun CalendarForVacation(
                         TextStyle.SHORT,
                         Locale("ru")
                     ).replaceFirstChar { it.uppercase() }
+
+                //Эта прекрасная переменная для того, чтобы если выбранная дата совпадала с currentDate,
+                // то отрисовывалась оконтовка синяя, в общем индексы шляпа
+                // (а эта переменная каждый раз отрабатывает, когда я нажимаю на кнопку, ведь экран перерисовывется)
+                val isSelected = when (currentDate) {
+                    firstSelectedDayInCalendar.value -> true
+                    secondSelectedDayInCalendar.value -> true
+                    else -> false
+                }
+
                 val isPlanned = currentDate in firstPlannedDay..lastPlannedDay // Проверка, запланирована ли дата
                 Button(
                     onClick = {
@@ -168,16 +179,16 @@ fun CalendarForVacation(
                         }
                     },
                     modifier = Modifier.border(
-                        width = if(isPlanned) {0.dp} else if(toggledButtonIndexFirst.intValue == index || toggledButtonIndexSecond.intValue == index) { 1.dp } else { 1.dp },
-                        color =  if(isPlanned) {Color.Transparent} else if(toggledButtonIndexFirst.intValue == index || toggledButtonIndexSecond.intValue == index) { BlueMain } else { ColorBorderData },
+                        width = if(isPlanned) {0.dp} else if(isSelected) { 1.dp } else { 1.dp },
+                        color =  if(isPlanned) {Color.Transparent} else if(isSelected) { BlueMain } else { ColorBorderData },
                         shape = RoundedCornerShape(8.dp)
                     ).height(74.dp).width(67.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonColors(
-                        containerColor = if(isPlanned) { GreenMain} else if(toggledButtonIndexFirst.intValue == index || toggledButtonIndexSecond.intValue == index) { Color.White } else { Color.White },
-                        contentColor = if(isPlanned) { Color.White } else if(toggledButtonIndexFirst.intValue == index || toggledButtonIndexSecond.intValue == index) { BlueMain } else { BlueMain },
-                        disabledContainerColor =  if(isPlanned) { GreenMain} else if(toggledButtonIndexFirst.intValue == index || toggledButtonIndexSecond.intValue == index) { Color.White } else { Color.White },
-                        disabledContentColor = if(isPlanned) { Color.White } else if(toggledButtonIndexFirst.intValue == index || toggledButtonIndexSecond.intValue == index) { BlueMain } else { BlueMain }
+                        containerColor = if(isPlanned) { GreenMain} else if(isSelected) { Color.White } else { Color.White },
+                        contentColor = if(isPlanned) { Color.White } else if(isSelected) { BlueMain } else { BlueMain },
+                        disabledContainerColor =  if(isPlanned) { GreenMain} else if(isSelected) { Color.White } else { Color.White },
+                        disabledContentColor = if(isPlanned) { Color.White } else if(isSelected) { BlueMain } else { BlueMain }
                     ),
                     contentPadding = PaddingValues(0.dp),
                     enabled = isEnabledButton.value

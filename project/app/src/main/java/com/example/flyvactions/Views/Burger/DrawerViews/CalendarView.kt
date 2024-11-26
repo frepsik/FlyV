@@ -105,8 +105,6 @@ fun CalendarScreen(navHostController: NavHostController, viewModel: CalendarView
                     Button(
                         onClick = {
                             viewModel.prevMonth()
-                            viewModel.selectedDate.value = null
-                            viewModel.clearListAEC()
                         },
                         modifier = Modifier.border(
                             width =  1.dp,
@@ -133,9 +131,6 @@ fun CalendarScreen(navHostController: NavHostController, viewModel: CalendarView
                     Button(
                         onClick = {
                             viewModel.nextMonth()
-                            viewModel.selectedDate.value = null
-                            viewModel.clearListAEC()
-
                         },
                         modifier = Modifier.border(
                             width =  1.dp,

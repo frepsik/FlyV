@@ -207,11 +207,11 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 //Здесь будет календарь
-                CalendarForVacation(viewModel.beginDayMonth, viewModel.endDayMonth, LocalDate.of(2024, 11, 25),  LocalDate.of(2024, 11, 30),){
-                        firstDayVacation, lastDayVacation ->
-                    viewModel.isEnabledPlanned = !(firstDayVacation == null || lastDayVacation == null)
-                    Log.d("RangeDates" ,"${firstDayVacation} - ${lastDayVacation}")
-                }
+                CalendarForVacation(viewModel.beginDayMonth, viewModel.endDayMonth,
+                    LocalDate.of(2024, 11, 25),  LocalDate.of(2024, 11, 30),  datesSelectedCallback = { firstDayVacation: LocalDate?, lastDayVacation: LocalDate? ->
+                        viewModel.isEnabledPlanned = !(firstDayVacation == null || lastDayVacation == null)
+                        Log.d("RangeDates", "$firstDayVacation - $lastDayVacation")
+                    })
             }
             Spacer(modifier = Modifier.height(190.dp))
             Box(
