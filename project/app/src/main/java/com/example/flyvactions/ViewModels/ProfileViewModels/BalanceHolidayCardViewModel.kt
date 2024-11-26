@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.Models.DataBase.Entities.AbsenceEmployee
 import com.example.flyvactions.Models.DataBase.Queries.Get
+import com.example.flyvactions.Models.WorkWithStringAndDate.convertStringToLocalDate
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Period
@@ -37,13 +38,16 @@ class BalanceHolidayCardViewModel : ViewModel() {
     fun fetchAbsencesEmployee(){
         var _daysVacationsForExperience = if(Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years > 10) { 10 }
         else {Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years}
-
+        val borderDate = LocalDate.now().minusDays(38)
         viewModelScope.launch {
             //Получаем id необходимой причины
             val idReasonVacation = get.getReasonAbsenceByName("Отпуск")!!.id
 
             //Получаем все записи отсуствия пользователя по причине отпуск (их может быть не более двух по логике моего "предприятия")
-            val listReasonsAbsencesEmployee : List<AbsenceEmployee> = get.getAbsencesEmployeesByIdUserAndReasonId(ProfileCache.profile.userInfo!!.id, idReasonVacation)
+            val listReasonsAbsencesEmployee : List<AbsenceEmployee> = get
+                .getAbsencesEmployeesByIdUserAndReasonId(ProfileCache.profile.userInfo!!.id, idReasonVacation)
+                .filter { convertStringToLocalDate(it.beginDate) >= borderDate } //В учёт берём минус месяц от текущей даты и до конца, что там будет (больше двух отпусков пользователь не возьмёт)
+
             var getDaysVacationPlanned : Int = 0
             listReasonsAbsencesEmployee.forEach{
                 getDaysVacationPlanned += it.amountDay

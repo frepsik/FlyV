@@ -1,6 +1,4 @@
-package com.example.flyvactions.Models.WorkWithString
-
-import androidx.compose.runtime.Composable
+package com.example.flyvactions.Models.WorkWithStringAndDate
 
 /**
  * Парсер для ФИО сотрудника компании (позволяет представить ФИО в формате Фамилия И.О.)

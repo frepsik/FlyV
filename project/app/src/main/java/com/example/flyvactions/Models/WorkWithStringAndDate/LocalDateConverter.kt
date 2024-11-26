@@ -1,4 +1,4 @@
-package com.example.flyvactions.Models.WorkWithString
+package com.example.flyvactions.Models.WorkWithStringAndDate
 
 
 import java.time.LocalDate

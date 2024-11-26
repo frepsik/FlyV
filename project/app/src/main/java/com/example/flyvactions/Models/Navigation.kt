@@ -141,7 +141,6 @@ fun Navigate(){
             composable(
                 route = "calendarView",
 
-                //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна profileView)
                 enterTransition = {
                     fadeIn(animationSpec = tween(600)) + slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Left,
@@ -162,12 +161,33 @@ fun Navigate(){
                     )
                 }
             )
-            { CalendarScreen() }
+            { CalendarScreen(navController) }
 
             //Отпуск
             composable(
-                route = "vacationView"
-            ) { VacationScreen() }
+                route = "vacationView",
+                enterTransition = {
+                    fadeIn(animationSpec = tween(600)) + slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        tween(600))
+                },
+                //Срабатывает когда я через navigate перехожу на другое окно
+                exitTransition = {
+                    fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        tween(600)
+                    )
+                },
+                //Срабатывает когда я выхожу с окна использовав popBackStack (свайп или кнопка на сенсоре телефона)
+                popExitTransition = {
+                    fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        tween(600)
+                    )
+                }
+            ) { VacationScreen(navController) }
+
+            //Отгул
             composable(
                 route = "daysOffView",
                 enterTransition = {
@@ -189,7 +209,9 @@ fun Navigate(){
                         tween(600)
                     )
                 }
-            ){ DaysOffScreen() }
+            ){ DaysOffScreen(navController) }
+
+
 
             //Больничный
             composable(
@@ -213,7 +235,7 @@ fun Navigate(){
                         tween(600)
                     )
                 }
-            ){ MedicalScreen() }
+            ){ MedicalScreen(navController) }
 
             //Командировка
             composable(
@@ -238,7 +260,7 @@ fun Navigate(){
                         tween(600)
                     )
                 }
-            ){ BusinessTripScreen() }
+            ){ BusinessTripScreen(navController) }
 
         }
     }

@@ -5,13 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import com.example.flyvactions.ui.theme.BlueMain
 
 /**
  * Окно где пользователь может оформить отгул
  */
 @Composable
-fun DaysOffScreen(){
+fun DaysOffScreen(navController: NavHostController){
     Column(
         modifier = Modifier.background(BlueMain).fillMaxSize()
     ) {  }

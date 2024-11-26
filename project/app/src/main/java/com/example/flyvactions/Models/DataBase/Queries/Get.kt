@@ -7,11 +7,10 @@ import com.example.flyvactions.Models.DataBase.Entities.Employee
 import com.example.flyvactions.Models.DataBase.Entities.ReasonAbsence
 import com.example.flyvactions.Models.DataBase.SupabaseConnection
 import com.example.flyvactions.Models.DataClasses.AbsenceEmployeeCalendar
-import com.example.flyvactions.Models.WorkWithString.convertStringToLocalDate
-import com.example.flyvactions.Models.WorkWithString.parseFullNameEmployee
+import com.example.flyvactions.Models.WorkWithStringAndDate.convertStringToLocalDate
+import com.example.flyvactions.Models.WorkWithStringAndDate.parseFullNameEmployee
 import com.example.flyvactions.Models.dateBetweenBeginDateAndEndDate
 import io.github.jan.supabase.postgrest.from
-import io.github.jan.supabase.postgrest.query.Columns
 import java.time.LocalDate
 
 /**

@@ -12,8 +12,8 @@ import com.example.flyvactions.Models.DataBase.Entities.Employee
 import com.example.flyvactions.Models.DataBase.Queries.Auth
 import com.example.flyvactions.Models.DataBase.Queries.Get
 import com.example.flyvactions.Models.DataClasses.AbsenceEmployeeCalendar
-import com.example.flyvactions.Models.WorkWithString.convertStringToLocalDate
-import com.example.flyvactions.Models.WorkWithString.parseFullNameEmployee
+import com.example.flyvactions.Models.WorkWithStringAndDate.convertStringToLocalDate
+import com.example.flyvactions.Models.WorkWithStringAndDate.parseFullNameEmployee
 import io.github.jan.supabase.gotrue.user.UserInfo
 import kotlinx.coroutines.launch
 import java.time.LocalDate
