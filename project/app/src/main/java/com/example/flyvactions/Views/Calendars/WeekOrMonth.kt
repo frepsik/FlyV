@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,7 +47,8 @@ import java.util.Locale
 fun CalendarWeekOrMonth(
     beginDate : LocalDate,
     endDate : LocalDate,
-    dateSelected : (LocalDate) -> Unit
+    selectedDate : MutableState<LocalDate?>,
+    dateSelectedCallback : (LocalDate) -> Unit
 ){
     val toggledButtonIndex = remember { mutableIntStateOf(-1) }
     val amountDaysInCalendar : Int = (endDate.dayOfYear - beginDate.dayOfYear) + 1
@@ -54,6 +56,8 @@ fun CalendarWeekOrMonth(
     val lastButtonIndex = remember { mutableIntStateOf(-1) }
     val isEnabledButton = remember { mutableStateOf(true) }
     val context = LocalContext.current
+
+
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(28.dp)
@@ -76,13 +80,14 @@ fun CalendarWeekOrMonth(
                         if(!toggleButton.value || lastButtonIndex.intValue!=index){
                             toggledButtonIndex.intValue = index
                             lastButtonIndex.intValue = index
-                            dateSelected(currentDate)
-
+                            selectedDate.value = currentDate
+                            dateSelectedCallback(currentDate)
                             toggleButton.value = true
                         }
                         else{
                             toggledButtonIndex.intValue = -1
-                            dateSelected(currentDate)
+                            selectedDate.value = null
+                            dateSelectedCallback(currentDate)
                             toggleButton.value = false
                         }
 

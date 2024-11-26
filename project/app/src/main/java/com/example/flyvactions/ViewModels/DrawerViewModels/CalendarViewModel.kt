@@ -10,6 +10,7 @@ import com.example.flyvactions.Models.DataBase.Queries.Get
 import com.example.flyvactions.Models.DataClasses.AbsenceEmployeeCalendar
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 /**
  * Бизнес-логика окна CalendarView
@@ -19,6 +20,8 @@ class CalendarViewModel : ViewModel() {
     private val get : Get = Get()
 
     private val currentDate : LocalDate = LocalDate.now()
+    private val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yy")
+    val currentDateOutput = currentDate.format(outputFormatter)
 
     private val months = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
         "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
@@ -36,7 +39,7 @@ class CalendarViewModel : ViewModel() {
     // которая создаёт новый объект LocalDate, с новым числом дня месяца
 
     //Выбранная дата
-    var selectedDate by mutableStateOf<LocalDate?>(null)
+    var selectedDate = mutableStateOf<LocalDate?>(null)
 
     //Список отсутствующих сотрудников
     private var _listAEC : MutableList<AbsenceEmployeeCalendar> = mutableListOf()
@@ -45,7 +48,6 @@ class CalendarViewModel : ViewModel() {
     var flagLazyColumn by mutableStateOf(false)
     var isData by mutableStateOf(false)
     var isToday by mutableStateOf(false)
-    var isReset by mutableStateOf(false)
 
     /**
      * Функция получения следующего месяца
@@ -102,21 +104,12 @@ class CalendarViewModel : ViewModel() {
 
 
     /**
-     * Функция поулчения сегодняшней даты
-     */
-    fun today(){
-        monthAndYear = "$currentMonth, $currentYear"
-        selectedDate = currentDate
-        isToday = true
-    }
-
-    /**
      * Метод для вызова функций из Models, с запросами к базе на получение пользователей, отсуствующих в определённую дату по определённой причине
      */
     fun fetchEmployeesByDateAbsence(){
 
         viewModelScope.launch {
-            val aec = get.getAbsenceEmployeesCalendarByDate(selectedDate!!)
+            val aec = get.getAbsenceEmployeesCalendarByDate(selectedDate.value!!)
             _listAEC.addAll(aec)
             Log.d("_listAEC", "${_listAEC}")
             Log.d("listAEC", "${listAEC}")
@@ -132,9 +125,11 @@ class CalendarViewModel : ViewModel() {
      * Очиста списка с пользователями (для того, чтобы не переполнялся)
      */
     fun clearListAEC(){
-        _listAEC.clear()
-        Log.d("_listAEC", "${ _listAEC}")
-        flagLazyColumn = false
-        isData = false
+        if(_listAEC.isNotEmpty()){
+            _listAEC.clear()
+            Log.d("_listAEC Clear", "${ _listAEC}")
+            flagLazyColumn = false
+            isData = false
+        }
     }
 }

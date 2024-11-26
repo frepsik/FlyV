@@ -44,12 +44,7 @@ import com.example.flyvactions.ui.theme.BlueMain
 import com.example.flyvactions.ui.theme.ColorBorderData
 import com.example.flyvactions.ui.theme.ColorTextDark
 import com.example.flyvactions.ui.theme.ColorTextLight
-import com.example.flyvactions.ui.theme.GreenMain
 import com.example.flyvactions.ui.theme.interFontFamily
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * Окно, где можно посмотреть в календаре от текущего месяца по последующие причины отсутствия сотрудников компании
@@ -110,8 +105,7 @@ fun CalendarScreen(navHostController: NavHostController, viewModel: CalendarView
                     Button(
                         onClick = {
                             viewModel.prevMonth()
-                            viewModel.selectedDate = null
-                            viewModel.isReset = true
+                            viewModel.selectedDate.value = null
                             viewModel.clearListAEC()
                         },
                         modifier = Modifier.border(
@@ -131,7 +125,7 @@ fun CalendarScreen(navHostController: NavHostController, viewModel: CalendarView
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.prev),
                             contentDescription = "prev",
-                            tint = ColorTextDark
+                            tint = ColorTextLight
                         )
                     }
 
@@ -139,8 +133,9 @@ fun CalendarScreen(navHostController: NavHostController, viewModel: CalendarView
                     Button(
                         onClick = {
                             viewModel.nextMonth()
-                            viewModel.selectedDate = null
+                            viewModel.selectedDate.value = null
                             viewModel.clearListAEC()
+
                         },
                         modifier = Modifier.border(
                             width =  1.dp,
@@ -159,65 +154,46 @@ fun CalendarScreen(navHostController: NavHostController, viewModel: CalendarView
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.next),
                             contentDescription = "prev",
-                            tint = ColorTextDark
+                            tint = ColorTextLight
                         )
                     }
 
-                    //Сегодня
-                    Button(
-                        onClick = {
-                            viewModel.today()
-                        },
+                    Box(
                         modifier = Modifier.border(
-                            width =  1.dp,
-                            color = ColorBorderData,
-                            shape = RoundedCornerShape(8.dp)
-                        ).height(41.dp).width(80.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonColors(
-                            containerColor =  Color.White,
-                            contentColor = Color.Transparent,
-                            disabledContainerColor = Color.White ,
-                            disabledContentColor = Color.Transparent
-                        ),
-                        contentPadding = PaddingValues(0.dp)
-                    ) {
+                                width =  1.dp,
+                                color = BlueMain,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .height(41.dp)
+                            .width(100.dp)
+                    ){
                         Text(
-                            text = "Сегодня",
+                            text = viewModel.currentDateOutput,
                             fontFamily = interFontFamily,
-                            fontSize = 16.sp,
+                            fontSize = 22.sp,
                             textAlign = TextAlign.Center,
-                            color = ColorTextDark
+                            color = ColorTextLight,
+                            modifier = Modifier.align(Alignment.Center)
                         )
                     }
+
                 }
             }
 
             //Календарь на месяц
-            CalendarWeekOrMonth(viewModel.beginDayMonth, viewModel.endDayMonth){
+            CalendarWeekOrMonth(viewModel.beginDayMonth, viewModel.endDayMonth, viewModel.selectedDate){
                     day ->
-                if(!viewModel.isReset){
-                    if(viewModel.selectedDate == null) {
-                        viewModel.selectedDate = day
-                        viewModel.fetchEmployeesByDateAbsence()
-                    }
-                    else if (viewModel.selectedDate == day){
-                        viewModel.selectedDate = null
-                        viewModel.clearListAEC()
-                        viewModel.isData = false
-                    }
-                    else{
-                        viewModel.selectedDate = day
-                        viewModel.clearListAEC()
-                        viewModel.fetchEmployeesByDateAbsence()
-                    }
+                Log.d("DateCallback", "${viewModel.selectedDate}")
+                if(viewModel.selectedDate.value==null){
+                    viewModel.clearListAEC()
+                    viewModel.isData = false
                 }
                 else{
-                    viewModel.isReset = false
-                    return@CalendarWeekOrMonth
+                    viewModel.clearListAEC()
+                    viewModel.fetchEmployeesByDateAbsence()
                 }
-
             }
+
             //Проверяем, нужно ли вообще хоть что то выводить и была ли выбрана дата
             if(viewModel.isData){
                 if(viewModel.flagLazyColumn){

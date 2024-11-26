@@ -124,7 +124,7 @@ fun MainScreen(
                            }
                            else{
                                //Очищаем данные под вывод (Чтобы при возвращении на экране не было данных, что не должно быть)
-                               viewModel.selectedDate = null
+                               viewModel.selectedDate.value = null
                                viewModel.clearListAEC()
 
                                navHostController.navigate("profileView"){
@@ -163,23 +163,11 @@ fun MainScreen(
            }
 
            //Календарь на неделю
-           CalendarWeekOrMonth(viewModel.dateBeginWeek, viewModel.dateEndWeek){
+           CalendarWeekOrMonth(viewModel.dateBeginWeek, viewModel.dateEndWeek, viewModel.selectedDate){
                day ->
-               if(viewModel.selectedDate == null) {
-                   viewModel.selectedDate = day
-
-                   viewModel.fetchEmployeesByDateAbsence(day)
-                   if(viewModel.isVacation){
-                       viewModel.flagVacationSoon = false
-                   }
-                   if(viewModel.isVacationEnd){
-                       viewModel.flagEndVacation = false
-                   }
-               }
-               else if (viewModel.selectedDate == day){
-                   viewModel.selectedDate = null
+               Log.d("DateCallback", "${viewModel.selectedDate}")
+               if(viewModel.selectedDate.value == null) {
                    viewModel.clearListAEC()
-
                    if(viewModel.isVacation){
                        viewModel.flagVacationSoon = true
                    }
@@ -188,9 +176,8 @@ fun MainScreen(
                    }
                }
                else{
-                   viewModel.selectedDate = day
                    viewModel.clearListAEC()
-                   viewModel.fetchEmployeesByDateAbsence(day)
+                   viewModel.fetchEmployeesByDateAbsence()
 
                    if(viewModel.isVacation){
                        viewModel.flagVacationSoon = false

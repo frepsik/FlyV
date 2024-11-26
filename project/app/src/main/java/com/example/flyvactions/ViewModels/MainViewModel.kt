@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.Models.DataBase.Entities.AbsenceEmployee
 import com.example.flyvactions.Models.DataBase.Entities.Employee
@@ -30,7 +31,7 @@ class MainViewModel : ViewModel() {
 
     val userInfo : UserInfo? = auth.authorizedUser()
 
-    var selectedDate by mutableStateOf<LocalDate?>(null)
+    var selectedDate = mutableStateOf<LocalDate?>(null)
 
     private var _listAEC : MutableList<AbsenceEmployeeCalendar> = mutableListOf()
     val listAEC : MutableList<AbsenceEmployeeCalendar> = _listAEC
@@ -71,14 +72,15 @@ class MainViewModel : ViewModel() {
     var urlProfile by mutableStateOf("")
     var isEnabledProfile by mutableStateOf(true)
 
+    var isResetCalendar = mutableStateOf(false)
 
     /**
      * Метод для вызова функций из Models, с запросами к базе на получение пользователей, отсуствующих в определённую дату по определённой причине
      */
-    fun fetchEmployeesByDateAbsence(date: LocalDate){
+    fun fetchEmployeesByDateAbsence(){
 
         viewModelScope.launch {
-            val aec = get.getAbsenceEmployeesCalendarByDate(date)
+            val aec = get.getAbsenceEmployeesCalendarByDate(selectedDate.value!!)
             _listAEC.addAll(aec)
             Log.d("_listAEC", "${_listAEC}")
             Log.d("listAEC", "${listAEC}")
@@ -93,10 +95,12 @@ class MainViewModel : ViewModel() {
      * Очиста списка с пользователями
      */
     fun clearListAEC(){
-        _listAEC.clear()
-        Log.d("_listAEC", "${ _listAEC}")
-        flagLazyColumn = false
-        flagAdditionalText = false
+        if(_listAEC.isNotEmpty()){
+            _listAEC.clear()
+            Log.d("_listAEC clear", "$_listAEC")
+            flagLazyColumn = false
+            flagAdditionalText = false
+        }
     }
 
     /**
@@ -144,8 +148,10 @@ class MainViewModel : ViewModel() {
             employee = get.getEmployeeById(ProfileCache.profile.userInfo!!.id)
             val cityName : String = get.getCityById(employee!!.cityId)!!.city
             urlProfile = employee!!.urlPhotoProfile ?: "https://lpdnebdhpgflnqtlksnj.supabase.co/storage/v1/object/public/photosProfileUsers/UnnamedProfile.jpg"
+
             with(ProfileCache.profile){
-                urlPhotoProfile = employee?.urlPhotoProfile
+                urlPhotoProfile = urlProfile
+                Log.d("urlPhotoUser", urlPhotoProfile!!)
                 city = cityName
                 fullName = parseFullNameEmployee(employee!!.fullName)
                 numberPhone = employee!!.numberPhone
