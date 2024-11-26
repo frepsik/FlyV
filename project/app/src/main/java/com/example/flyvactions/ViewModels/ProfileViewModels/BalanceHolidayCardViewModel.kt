@@ -36,9 +36,9 @@ class BalanceHolidayCardViewModel : ViewModel() {
      * Функция на получение отсутствий пользователя, чтобы определить, запланированные дни отсуствия по отпуску
      */
     fun fetchAbsencesEmployee(){
-        var _daysVacationsForExperience = if(Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years > 10) { 10 }
+        var _daysVacationsForExperience = if(Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years > 3) { 3 }
         else {Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years}
-        val borderDate = LocalDate.now().minusDays(38)
+        val borderDate = LocalDate.now().minusDays(31)
         viewModelScope.launch {
             //Получаем id необходимой причины
             val idReasonVacation = get.getReasonAbsenceByName("Отпуск")!!.id
@@ -52,13 +52,13 @@ class BalanceHolidayCardViewModel : ViewModel() {
             listReasonsAbsencesEmployee.forEach{
                 getDaysVacationPlanned += it.amountDay
             }
-            if(getDaysVacationPlanned in 14..24){
+            if(getDaysVacationPlanned in 14..17){
                 daysVacationsForExperiencePlanned = getDaysVacationPlanned - 14 //Получаем количество запланированных за стаж
                 _daysVacationsForExperience -= daysVacationsForExperiencePlanned //Получаем нынешний баланс за стаж с учётом запланированных
                 daysVacationPlanned = 14 //Тут два сценария, либо 14, либо 28, остальное это дни за стаж, которые можно добавить к 14 или 28
                 daysVacationsForExperience = _daysVacationsForExperience
             }
-            else if(getDaysVacationPlanned in 28..38){
+            else if(getDaysVacationPlanned in 28..31){
                 daysVacationsForExperiencePlanned = getDaysVacationPlanned - 28
                 _daysVacationsForExperience -= daysVacationsForExperiencePlanned
                 daysVacationPlanned = 28

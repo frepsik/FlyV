@@ -5,23 +5,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.flyvactions.Models.DataBase.Queries.Get
-import com.example.flyvactions.Models.DataClasses.AbsenceEmployeeCalendar
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 /**
- * Бизнес-логика окна CalendarView
+ * Бизнес-логика окна VacationView
  */
-class CalendarViewModel : ViewModel() {
-
+class VacationVIewModel : ViewModel() {
     private val get : Get = Get()
 
     private val currentDate : LocalDate = LocalDate.now()
-    private val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yy")
-    val currentDateOutput = currentDate.format(outputFormatter)
 
     private val months = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
         "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
@@ -41,12 +35,9 @@ class CalendarViewModel : ViewModel() {
     //Выбранная дата
     var selectedDate = mutableStateOf<LocalDate?>(null)
 
-    //Список отсутствующих сотрудников
-    private var _listAEC : MutableList<AbsenceEmployeeCalendar> = mutableListOf()
-    val listAEC : MutableList<AbsenceEmployeeCalendar> = _listAEC
+    var isShowCardBalanceHoliday by mutableStateOf(false)
+    var isEnabledPlanned by mutableStateOf(false)
 
-    var flagLazyColumn by mutableStateOf(false)
-    var isData by mutableStateOf(false)
 
     /**
      * Функция получения следующего месяца
@@ -65,7 +56,6 @@ class CalendarViewModel : ViewModel() {
         }
         val month = months[indexCurrentMonth]
 
-
         monthAndYear = "$month, $newYear"
     }
 
@@ -73,21 +63,18 @@ class CalendarViewModel : ViewModel() {
      * Функция получения предыдущего месяца
      */
     fun prevMonth(){
-        //Добавил на ограничение на 2023 год, будем считать, что компания начала работу с этого года
-        if(newYear >= 2023){
+        //Нельзя переключать на месяц позднее нынешнего в логике оформления отпусков
+        if(newYear > currentYear || (newYear == currentYear && indexCurrentMonth + 1 > currentDate.monthValue) ){
             if(indexCurrentMonth in 1..11){
                 indexCurrentMonth -= 1
                 editBeginAndEndDateMonth(indexCurrentMonth, newYear)
             }
-            //Здесь для того, чтобы не перейти на предыдущий месяц и год, если это 0 по индексу месяц 2023
-            else if(newYear > 2023){
+            else{
                 indexCurrentMonth = 11
                 newYear -= 1
                 editBeginAndEndDateMonth(indexCurrentMonth, newYear)
             }
             val month = months[indexCurrentMonth]
-
-
             monthAndYear = "$month, $newYear"
         }
     }
@@ -99,36 +86,5 @@ class CalendarViewModel : ViewModel() {
     private fun editBeginAndEndDateMonth(indexCurrentMonth : Int, year : Int){
         beginDayMonth = LocalDate.of(year,indexCurrentMonth+1, 1)
         endDayMonth = beginDayMonth.withDayOfMonth(beginDayMonth!!.lengthOfMonth())
-    }
-
-
-    /**
-     * Метод для вызова функций из Models, с запросами к базе на получение пользователей, отсуствующих в определённую дату по определённой причине
-     */
-    fun fetchEmployeesByDateAbsence(){
-
-        viewModelScope.launch {
-            val aec = get.getAbsenceEmployeesCalendarByDate(selectedDate.value!!)
-            _listAEC.addAll(aec)
-            Log.d("_listAEC", "${_listAEC}")
-            Log.d("listAEC", "${listAEC}")
-
-            //Проверяем, есть ли кто то в списке по дате в зависимости от этого выводим список отсутствующих или запись, что все на месте
-            flagLazyColumn = _listAEC.isNotEmpty()
-            isData = true
-
-        }
-    }
-
-    /**
-     * Очиста списка с пользователями (для того, чтобы не переполнялся)
-     */
-    fun clearListAEC(){
-        if(_listAEC.isNotEmpty()){
-            _listAEC.clear()
-            Log.d("_listAEC Clear", "${ _listAEC}")
-            flagLazyColumn = false
-            isData = false
-        }
     }
 }
