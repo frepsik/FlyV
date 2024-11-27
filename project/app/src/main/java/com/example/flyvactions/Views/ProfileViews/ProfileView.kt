@@ -238,7 +238,12 @@ fun ProfileScreen(navHostController: NavHostController, viewModel: ProfileViewMo
                             fontFamily = interFontFamily,
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.clickable{
-                                navHostController.navigate("editProfileView")
+                                if(!isInternetConnection(context)){
+                                    Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
+                                }
+                                else{
+                                    navHostController.navigate("editProfileView")
+                                }
                                 viewModel.isShowCardBalanceHoliday = false
                             }
                         )

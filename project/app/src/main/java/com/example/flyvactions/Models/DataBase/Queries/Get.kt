@@ -5,6 +5,7 @@ import com.example.flyvactions.Models.DataBase.Entities.AbsenceEmployee
 import com.example.flyvactions.Models.DataBase.Entities.City
 import com.example.flyvactions.Models.DataBase.Entities.Employee
 import com.example.flyvactions.Models.DataBase.Entities.ReasonAbsence
+import com.example.flyvactions.Models.DataBase.Entities.Substitution
 import com.example.flyvactions.Models.DataBase.SupabaseConnection
 import com.example.flyvactions.Models.DataClasses.AbsenceEmployeeCalendar
 import com.example.flyvactions.Models.WorkWithStringAndDate.convertStringToLocalDate
@@ -18,6 +19,46 @@ import java.time.LocalDate
  */
 class Get() {
     private val db = SupabaseConnection.supabase
+
+    /**
+     * Запрос на получение отсутствий пользователя
+     */
+    suspend fun getAbsencesEmployeesByUserId(idUser : String) : List<AbsenceEmployee> {
+        var listAbsencesEmployees : List<AbsenceEmployee> = listOf()
+        try {
+            listAbsencesEmployees = db
+                .from("AbsencesEmployees")
+                .select {
+                    filter {
+                        eq("employee_id", idUser)
+                    }
+                }
+                .decodeList<AbsenceEmployee>()
+            Log.d("GetAbsencesEmployeesByUserId", "FetchSuccess")
+        }
+        catch (e : Exception){
+            Log.d("ExceptionGetAbsencesEmployeesByUserId", "$e")
+        }
+        return listAbsencesEmployees
+    }
+
+    /**
+     * Запрос на получение тех кого подменяет конкретный пользователь
+     */
+    suspend fun getSubstitutions() : List<Substitution>{
+        var substitution : List<Substitution> = listOf()
+        try {
+            substitution = db
+                .from("Substitutions")
+                .select()
+                .decodeList<Substitution>()
+            Log.d("GetSubstitutions", "FetchSuccess")
+        }
+        catch (e: Exception){
+            Log.d("ExceptionGetSubstitutions", "$e")
+        }
+        return substitution
+    }
 
     /**
      * Запрос на получение uuid причины отсутствия по названию

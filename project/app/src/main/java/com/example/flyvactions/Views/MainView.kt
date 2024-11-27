@@ -77,6 +77,7 @@ fun MainScreen(
             viewModel.urlProfile = ProfileCache.profile.urlPhotoProfile!!
         }
         viewModel.isVacationSoon()
+        viewModel.clearListAEC()
     }
 
 

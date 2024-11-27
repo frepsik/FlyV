@@ -24,6 +24,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,11 +32,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -45,9 +43,7 @@ import com.example.flyvactions.Models.isInternetConnection
 import com.example.flyvactions.R
 import com.example.flyvactions.ViewModels.DrawerViewModels.VacationVIewModel
 import com.example.flyvactions.Views.Calendars.CalendarForVacation
-import com.example.flyvactions.Views.Calendars.CalendarWeekOrMonth
 import com.example.flyvactions.Views.ProfileViews.BalanceHolidayCardScreen
-import com.example.flyvactions.Views.SupportingMainViews.AbsencesEmployeesLazyColumn
 import com.example.flyvactions.ui.theme.BlueMain
 import com.example.flyvactions.ui.theme.ColorBackgroundButton
 import com.example.flyvactions.ui.theme.ColorBorderData
@@ -55,6 +51,8 @@ import com.example.flyvactions.ui.theme.ColorTextDark
 import com.example.flyvactions.ui.theme.ColorTextLight
 import com.example.flyvactions.ui.theme.interFontFamily
 import java.time.LocalDate
+import java.time.Period
+import java.time.temporal.ChronoUnit
 
 /**
  * Окно где пользователь может оформить отпуск
@@ -62,6 +60,10 @@ import java.time.LocalDate
 @Composable
 fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIewModel = viewModel()){
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        //Получаем дни отпусков
+        viewModel.fetchDatesVacation()
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -215,13 +217,20 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
                 CalendarForVacation(
                     viewModel.beginDayMonth,
                     viewModel.endDayMonth,
-                    LocalDate.of(2024, 11, 25),
-                    LocalDate.of(2024, 12, 3),
+                    viewModel.listFirstAndLastDaysVacation,
+                    viewModel.resetState,
                     datesSelectedCallback = { firstDayVacation: LocalDate?, lastDayVacation: LocalDate? ->
-                        viewModel.isEnabledPlanned = !(firstDayVacation == null || lastDayVacation == null)
+                        viewModel.isEnabledPlannedFirst = !(firstDayVacation == null || lastDayVacation == null)
                         viewModel.firstSelectedDate.value = firstDayVacation
                         viewModel.lastSelectedDate.value = lastDayVacation
                         Log.d("RangeDates", "${viewModel.firstSelectedDate.value} - ${viewModel.lastSelectedDate.value}")
+                        if(viewModel.isEnabledPlannedFirst){
+                            viewModel.amountDaysPlanned = ChronoUnit.DAYS.between(viewModel.firstSelectedDate.value, viewModel.lastSelectedDate.value).toInt() + 1//учитываем первую границу
+                            //Вызываем проверку все возможных условий
+                            viewModel.checkPossibilityVacation()
+                        }
+
+
                     }
                 )
             }
@@ -234,9 +243,14 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
             ){
                 Button(
                     onClick = {
-
+                        if(!isInternetConnection(context)){
+                            Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            viewModel.vacationRegistration()
+                        }
                     },
-                    enabled = viewModel.isEnabledPlanned,
+                    enabled = viewModel.isEnabledPlannedFirst && viewModel.isEnabledPlannedSecond,
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonColors(
                         containerColor = BlueMain,
@@ -266,6 +280,37 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
                 BalanceHolidayCardScreen()
             }
         }
-    }
 
+        //Подсказки для пользователя
+        if(viewModel.isVisionHint){
+            Toast.makeText(context, viewModel.hint, Toast.LENGTH_SHORT).show()
+            viewModel.isVisionHint = false
+        }
+
+        //Логика результата по добавлению отпуска
+        if(viewModel.isShowInsert){
+            if(!viewModel.isSuccessInsert!!){
+                Toast.makeText(context, "Во время оформления отпуска, произошла ошибка", Toast.LENGTH_SHORT).show()
+                viewModel.isSuccessInsert = null
+                Log.d("InsertDate", "NotSuccess")
+
+                viewModel.isEnabledPlannedFirst = false
+                viewModel.isEnabledPlannedSecond = false
+            }
+            else if(viewModel.isSuccessInsert == null){
+                Log.d("ExceptionNull", "I didn't get it somewhere")
+            }
+            else{
+                Log.d("Zahel", "Vishel")
+                Toast.makeText(context, "Отпуск успешно оформлен", Toast.LENGTH_SHORT).show()
+                viewModel.resetState.value = true
+
+                viewModel.isEnabledPlannedFirst = false
+                viewModel.isEnabledPlannedSecond = false
+
+                viewModel.isSuccessInsert = null
+            }
+            viewModel.isShowInsert = false
+        }
+    }
 }

@@ -72,7 +72,6 @@ class MainViewModel : ViewModel() {
     var urlProfile by mutableStateOf("")
     var isEnabledProfile by mutableStateOf(true)
 
-    var isResetCalendar = mutableStateOf(false)
 
     /**
      * Метод для вызова функций из Models, с запросами к базе на получение пользователей, отсуствующих в определённую дату по определённой причине

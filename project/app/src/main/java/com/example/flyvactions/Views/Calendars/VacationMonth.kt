@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,8 +47,8 @@ import java.util.Locale
 fun CalendarForVacation(
     beginDate : LocalDate,
     endDate : LocalDate,
-    firstPlannedDay : LocalDate,
-    lastPlannedDay : LocalDate,
+    firstAndLastDaysVacation : List<List<LocalDate>>,
+    resetState: MutableState<Boolean>,
     datesSelectedCallback : (LocalDate?, LocalDate?) -> Unit
 ){
     val firstSelectedDayInCalendar = remember { mutableStateOf<LocalDate?>(null) }
@@ -63,7 +64,19 @@ fun CalendarForVacation(
     val isEnabledButton = remember { mutableStateOf(true) }
     val context = LocalContext.current
 
+    //Сбрасываем данные (ещё можно переписать это всё дело в теории и сделать прям по датам, закидывать их, но я чёто не хочу и времени не много, но на заметочку, что так можно сделать)
+    if(resetState.value){
+        firstSelectedDayInCalendar.value = null
+        secondSelectedDayInCalendar.value = null
 
+        toggledButtonIndexFirst.intValue = -1
+        toggledButtonIndexSecond.intValue = -1
+        toggleButtonFirst.value = false
+        toggleButtonSecond.value = false
+        lastButtonIndexFirst.intValue = -1
+        lastButtonIndexSecond.intValue = -1
+        resetState.value = false
+    }
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ){
@@ -97,7 +110,16 @@ fun CalendarForVacation(
                     else -> false
                 }
 
-                val isPlanned = currentDate in firstPlannedDay..lastPlannedDay // Проверка, запланирована ли дата
+
+                var isPlanned = false
+                for (it in firstAndLastDaysVacation){
+                    // Проверка, запланирована ли дата
+                    if(currentDate in it[0]..it[1]){
+                        isPlanned = true
+                        break
+                    }
+                }
+
                 Button(
                     onClick = {
                         //Интернет

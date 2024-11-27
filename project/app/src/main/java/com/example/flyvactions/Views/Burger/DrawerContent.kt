@@ -1,5 +1,6 @@
 package com.example.flyvactions.Views.Burger
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,10 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.flyvactions.Models.isInternetConnection
 import com.example.flyvactions.ui.theme.BlueMain
 import com.example.flyvactions.ui.theme.interFontFamily
 import kotlinx.coroutines.CoroutineScope
@@ -37,6 +40,7 @@ fun DrawerContent(
     coroutineScope: CoroutineScope,
     drawerState: DrawerState
 ){
+    val context = LocalContext.current
     ModalDrawerSheet(
         modifier = Modifier.width(290.dp),
         drawerShape = RoundedCornerShape(5.dp)
@@ -83,9 +87,15 @@ fun DrawerContent(
                         coroutineScope.launch {
                             drawerState.close()
                         }
-                        navController.navigate("calendarView"){
-                            popUpTo("mainView")
+                        if(!isInternetConnection(context)){
+                            Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
                         }
+                        else{
+                            navController.navigate("calendarView"){
+                                popUpTo("mainView")
+                            }
+                        }
+
                     }
                 )
                 HorizontalDivider()
@@ -104,8 +114,13 @@ fun DrawerContent(
                         coroutineScope.launch {
                             drawerState.close()
                         }
-                        navController.navigate("vacationView"){
-                            popUpTo("mainView")
+                        if(!isInternetConnection(context)){
+                            Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            navController.navigate("vacationView"){
+                                popUpTo("mainView")
+                            }
                         }
                     }
                 )
@@ -124,9 +139,15 @@ fun DrawerContent(
                         coroutineScope.launch {
                             drawerState.close()
                         }
-                        navController.navigate("daysOffView"){
-                            popUpTo("mainView")
+                        if(!isInternetConnection(context)){
+                            Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
                         }
+                        else{
+                            navController.navigate("daysOffView"){
+                                popUpTo("mainView")
+                            }
+                        }
+
                     }
                 )
                 //Больничный
@@ -144,8 +165,13 @@ fun DrawerContent(
                         coroutineScope.launch {
                             drawerState.close()
                         }
-                        navController.navigate("medicalView"){
-                            popUpTo("mainView")
+                        if(!isInternetConnection(context)){
+                            Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            navController.navigate("medicalView"){
+                                popUpTo("mainView")
+                            }
                         }
                     }
                 )
@@ -168,8 +194,13 @@ fun DrawerContent(
                        coroutineScope.launch {
                            drawerState.close()
                        }
-                       navController.navigate("businessTripView"){
-                           popUpTo("mainView")
+                       if(!isInternetConnection(context)){
+                           Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
+                       }
+                       else{
+                           navController.navigate("businessTripView"){
+                               popUpTo("mainView")
+                           }
                        }
                    }
                )

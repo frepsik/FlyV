@@ -86,6 +86,7 @@ fun CalendarWeekOrMonth(
                             dateSelectedCallback(currentDate)
                         }
                         else{
+                            selectedDate.value = null
                             selectedDateInFunc.value = null
                             dateSelectedCallback(currentDate)
                         }

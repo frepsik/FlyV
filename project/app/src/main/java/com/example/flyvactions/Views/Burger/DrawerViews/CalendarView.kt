@@ -180,11 +180,12 @@ fun CalendarScreen(navHostController: NavHostController, viewModel: CalendarView
                     day ->
                 Log.d("DateCallback", "${viewModel.selectedDate}")
                 if(viewModel.selectedDate.value==null){
-                    viewModel.clearListAEC()
                     viewModel.isData = false
+                    viewModel.clearListAEC()
                 }
                 else{
                     Log.d("EditDate", "Begin")
+                    viewModel.isData = false
                     viewModel.clearListAEC()
                     viewModel.fetchEmployeesByDateAbsence()
                 }

@@ -12,6 +12,50 @@ class Update {
     private val db = SupabaseConnection.supabase
 
     /**
+     * Запрос на обновление статуса работника
+     */
+    suspend fun updateIsWorksByUserId(idUser : String, isWorks : Boolean){
+        try {
+            db.from("Employees")
+                .update(
+                    {
+                        set("is_works", isWorks)
+                    }
+                ){
+                    filter {
+                        eq("id", idUser)
+                    }
+                }
+            Log.d("UpdateIsWorksByUserId", "SuccessUpdate")
+        }
+        catch (e: Exception){
+            Log.d("ExceptionUpdateIsWorksByUserId", "$e")
+        }
+    }
+
+    /**
+     * Запрос на обновление количества отпускных дней пользователя
+     */
+    suspend fun updateDaysVacationsByUserId(idUser : String, daysVacations : Int){
+        try {
+            db.from("Employees")
+                .update(
+                    {
+                        set("days_vacations", daysVacations)
+                    }
+                ){
+                    filter {
+                        eq("id", idUser)
+                    }
+                }
+            Log.d("UpdateDaysVacationsByUserId", "SuccessUpdate")
+        }
+        catch (e: Exception){
+            Log.d("ExceptionUpdateDaysVacationsByUserId", "$e")
+        }
+    }
+
+    /**
      * Запрос на обновление пользователской почтоы сотрудника компании по его уникальному uuid
      */
     suspend fun updateUserEmailByEmployeeId(uuid:String, email: String) : Employee?{

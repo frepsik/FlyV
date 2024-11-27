@@ -14,6 +14,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.flyvactions.Models.Cache.ProfileCache
 import com.example.flyvactions.Models.isInternetConnection
 import com.example.flyvactions.ViewModels.ProfileViewModels.BalanceHolidayCardViewModel
 import com.example.flyvactions.ui.theme.ColorBackground
@@ -42,9 +46,11 @@ fun BalanceHolidayCardScreen(viewModel: BalanceHolidayCardViewModel = viewModel(
         Toast.makeText(context, "Проблемы с интернетом. Восстановите соединение", Toast.LENGTH_SHORT).show()
     }
     else{
-        LaunchedEffect(true) {
+        LaunchedEffect(Unit) {
             //Получаем значения в карточку
             viewModel.fetchAbsencesEmployee()
+            viewModel.daysVacation = ProfileCache.profile.daysVacation
+            viewModel.daysOff = ProfileCache.profile.daysOff
         }
     }
 

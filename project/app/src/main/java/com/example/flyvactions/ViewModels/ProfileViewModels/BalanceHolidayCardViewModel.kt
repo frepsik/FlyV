@@ -1,5 +1,6 @@
 package com.example.flyvactions.ViewModels.ProfileViewModels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
@@ -23,10 +24,12 @@ class BalanceHolidayCardViewModel : ViewModel() {
 
     var daysVacation by mutableIntStateOf(ProfileCache.profile.daysVacation)
     var daysOff by mutableIntStateOf(ProfileCache.profile.daysOff)
+
+    private val difference = Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years
     //Считает разницу в годах между двумя датами (за счёт этого, определим, сколько первично у сотрудника, должно быть добавлено к отпускным дням) (но небольше 10 дополнительных дней за стаж)
     var daysVacationsForExperience by mutableIntStateOf(
-        if(Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years > 10) { 10 }
-        else {Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years}
+        if(difference > 3) { 3 }
+        else {difference}
     )
 
     var daysVacationPlanned by mutableIntStateOf(0)
@@ -47,7 +50,7 @@ class BalanceHolidayCardViewModel : ViewModel() {
             val listReasonsAbsencesEmployee : List<AbsenceEmployee> = get
                 .getAbsencesEmployeesByIdUserAndReasonId(ProfileCache.profile.userInfo!!.id, idReasonVacation)
                 .filter { convertStringToLocalDate(it.beginDate) >= borderDate } //В учёт берём минус месяц от текущей даты и до конца, что там будет (больше двух отпусков пользователь не возьмёт)
-
+            Log.d("listVacations", "$listReasonsAbsencesEmployee")
             var getDaysVacationPlanned : Int = 0
             listReasonsAbsencesEmployee.forEach{
                 getDaysVacationPlanned += it.amountDay
