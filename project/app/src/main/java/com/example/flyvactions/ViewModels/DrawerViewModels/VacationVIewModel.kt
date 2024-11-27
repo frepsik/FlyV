@@ -5,9 +5,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.flyvactions.Models.Cache.ProfileCache
+import com.example.flyvactions.Models.DataBase.Entities.AbsenceEmployee
 import com.example.flyvactions.Models.DataBase.Queries.Get
+import com.example.flyvactions.Models.WorkWithStringAndDate.convertStringToLocalDate
+import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 /**
  * Бизнес-логика окна VacationView
@@ -32,8 +37,9 @@ class VacationVIewModel : ViewModel() {
     var endDayMonth by mutableStateOf(currentDate.withDayOfMonth(currentDate.lengthOfMonth())) //Считаем длину месяца и это число пихаем в функцию,
     // которая создаёт новый объект LocalDate, с новым числом дня месяца
 
-    //Выбранная дата
-    var selectedDate = mutableStateOf<LocalDate?>(null)
+    //Выбранные даты
+    var firstSelectedDate = mutableStateOf<LocalDate?>(null)
+    var lastSelectedDate = mutableStateOf<LocalDate?>(null)
 
     var isShowCardBalanceHoliday by mutableStateOf(false)
     var isEnabledPlanned by mutableStateOf(false)
@@ -86,5 +92,24 @@ class VacationVIewModel : ViewModel() {
     private fun editBeginAndEndDateMonth(indexCurrentMonth : Int, year : Int){
         beginDayMonth = LocalDate.of(year,indexCurrentMonth+1, 1)
         endDayMonth = beginDayMonth.withDayOfMonth(beginDayMonth!!.lengthOfMonth())
+    }
+
+
+    /**
+     * Функция для получения отпусков пользователя в ближайшее время
+     */
+    fun fetchDatesVacation(){
+
+        val borderDate = LocalDate.now().minusDays(31)
+
+        viewModelScope.launch {
+            val idReasonVacation = get.getReasonAbsenceByName("Отпуск")!!.id
+            val listReasonsAbsencesEmployee : List<AbsenceEmployee> = get
+                .getAbsencesEmployeesByIdUserAndReasonId(ProfileCache.profile.userInfo!!.id, idReasonVacation)
+                .filter {
+                    convertStringToLocalDate(it.beginDate) >= borderDate //В учёт берём минус месяц от текущей даты и до конца, что там будет (больше двух отпусков пользователь не возьмёт)
+                }
+
+        }
     }
 }

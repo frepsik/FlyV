@@ -63,8 +63,9 @@ import java.time.LocalDate
 fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIewModel = viewModel()){
     val context = LocalContext.current
     Box(
-        modifier = Modifier.fillMaxSize()
-            .pointerInput(Unit){
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
                         viewModel.isShowCardBalanceHoliday = false
@@ -91,8 +92,8 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
                     modifier = Modifier
                         .size(30.dp)
                         .clickable {
-                            navHostController.navigate("mainView"){
-                                popUpTo(0){
+                            navHostController.navigate("mainView") {
+                                popUpTo(0) {
                                     inclusive = true
                                 }
                                 launchSingleTop = true
@@ -123,13 +124,15 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
                     Button(
                         onClick = {
                             viewModel.prevMonth()
-                            viewModel.selectedDate.value = null
                         },
-                        modifier = Modifier.border(
-                            width =  1.dp,
-                            color = ColorBorderData,
-                            shape = RoundedCornerShape(8.dp)
-                        ).height(41.dp).width(44.dp),
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = ColorBorderData,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .height(41.dp)
+                            .width(44.dp),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonColors(
                             containerColor =  Color.White,
@@ -150,13 +153,15 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
                     Button(
                         onClick = {
                             viewModel.nextMonth()
-                            viewModel.selectedDate.value = null
                         },
-                        modifier = Modifier.border(
-                            width =  1.dp,
-                            color = ColorBorderData,
-                            shape = RoundedCornerShape(8.dp)
-                        ).height(41.dp).width(44.dp),
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = ColorBorderData,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .height(41.dp)
+                            .width(44.dp),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonColors(
                             containerColor =  Color.White,
@@ -206,14 +211,23 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                //Здесь будет календарь
-                CalendarForVacation(viewModel.beginDayMonth, viewModel.endDayMonth,
-                    LocalDate.of(2024, 11, 25),  LocalDate.of(2024, 11, 30),  datesSelectedCallback = { firstDayVacation: LocalDate?, lastDayVacation: LocalDate? ->
+                //Календарь
+                CalendarForVacation(
+                    viewModel.beginDayMonth,
+                    viewModel.endDayMonth,
+                    LocalDate.of(2024, 11, 25),
+                    LocalDate.of(2024, 12, 3),
+                    datesSelectedCallback = { firstDayVacation: LocalDate?, lastDayVacation: LocalDate? ->
                         viewModel.isEnabledPlanned = !(firstDayVacation == null || lastDayVacation == null)
-                        Log.d("RangeDates", "$firstDayVacation - $lastDayVacation")
-                    })
+                        viewModel.firstSelectedDate.value = firstDayVacation
+                        viewModel.lastSelectedDate.value = lastDayVacation
+                        Log.d("RangeDates", "${viewModel.firstSelectedDate.value} - ${viewModel.lastSelectedDate.value}")
+                    }
+                )
             }
+
             Spacer(modifier = Modifier.height(190.dp))
+
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
@@ -230,7 +244,9 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
                         disabledContainerColor = ColorBackgroundButton,
                         disabledContentColor = ColorTextDark
                     ),
-                    modifier = Modifier.height(52.dp).width(215.dp)
+                    modifier = Modifier
+                        .height(52.dp)
+                        .width(215.dp)
                 ) {
                     Text(
                         text = "Запланировать",
@@ -244,7 +260,7 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
             modifier = Modifier
                 .zIndex(1f)
                 .align(Alignment.Center)
-                .padding(top=20.dp)
+                .padding(top = 20.dp)
         ){
             if(viewModel.isShowCardBalanceHoliday){
                 BalanceHolidayCardScreen()

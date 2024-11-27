@@ -184,6 +184,7 @@ fun CalendarScreen(navHostController: NavHostController, viewModel: CalendarView
                     viewModel.isData = false
                 }
                 else{
+                    Log.d("EditDate", "Begin")
                     viewModel.clearListAEC()
                     viewModel.fetchEmployeesByDateAbsence()
                 }
