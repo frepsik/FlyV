@@ -282,7 +282,6 @@ class VacationVIewModel : ViewModel() {
                 updateData()
                 //Обновляю дни отпуска в базе данных
                 update.updateDaysVacationsByUserId(ProfileCache.profile.userInfo!!.id, ProfileCache.profile.daysVacation)
-                update.updateIsWorksByUserId(ProfileCache.profile.userInfo!!.id, false)
             }
             isShowInsert = isSuccessInsert!!
         }

@@ -290,7 +290,7 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
             viewModel.isVisionHint = false
         }
 
-        //Логика результата по добавлению отпуска
+        //Логика в результате планирования отпуска
         if(viewModel.isShowInsert){
             if(!viewModel.isSuccessInsert!!){
                 Toast.makeText(context, "Во время оформления отпуска, произошла ошибка", Toast.LENGTH_SHORT).show()
@@ -304,7 +304,6 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
                 Log.d("ExceptionNull", "I didn't get it somewhere")
             }
             else{
-                Log.d("Zahel", "Vishel")
                 Toast.makeText(context, "Отпуск успешно оформлен", Toast.LENGTH_SHORT).show()
                 viewModel.resetState.value = true
 

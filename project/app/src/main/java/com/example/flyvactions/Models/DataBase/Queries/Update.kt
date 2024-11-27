@@ -12,6 +12,28 @@ class Update {
     private val db = SupabaseConnection.supabase
 
     /**
+     * Запрос на обновление количества отгулов пользователя
+     */
+    suspend fun updateDaysOffByUserId(idUser : String, daysOff : Int){
+        try {
+            db.from("Employees")
+                .update(
+                    {
+                        set("days_off",daysOff)
+                    }
+                ){
+                    filter {
+                        eq("id", idUser)
+                    }
+                }
+            Log.d("UpdateDaysOffByUserId", "UpdateSuccess")
+        }
+        catch (e:Exception){
+            Log.d("ExceptionUpdateDaysOffByUserId", "$e")
+        }
+    }
+
+    /**
      * Запрос на обновление статуса работника
      */
     suspend fun updateIsWorksByUserId(idUser : String, isWorks : Boolean){

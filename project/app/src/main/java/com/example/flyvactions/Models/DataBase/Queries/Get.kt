@@ -20,6 +20,7 @@ import java.time.LocalDate
 class Get() {
     private val db = SupabaseConnection.supabase
 
+
     /**
      * Запрос на получение отсутствий пользователя
      */
