@@ -309,8 +309,6 @@ class VacationVIewModel : ViewModel() {
             Log.d("ProfileCache", "${ProfileCache.profile.daysVacation}")
         }
 
-        firstSelectedDate.value = null
-        lastSelectedDate.value = null
         Log.d("UpdateData", "Success")
     }
 }

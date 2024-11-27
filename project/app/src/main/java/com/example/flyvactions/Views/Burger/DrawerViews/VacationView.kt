@@ -39,10 +39,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.flyvactions.Models.WorkWithStringAndDate.localDateToCalendar
 import com.example.flyvactions.Models.isInternetConnection
 import com.example.flyvactions.R
 import com.example.flyvactions.ViewModels.DrawerViewModels.VacationVIewModel
 import com.example.flyvactions.Views.Calendars.CalendarForVacation
+import com.example.flyvactions.Views.Calendars.openCalendarEvent
 import com.example.flyvactions.Views.ProfileViews.BalanceHolidayCardScreen
 import com.example.flyvactions.ui.theme.BlueMain
 import com.example.flyvactions.ui.theme.ColorBackgroundButton
@@ -248,6 +250,7 @@ fun VacationScreen(navHostController: NavHostController, viewModel: VacationVIew
                         }
                         else{
                             viewModel.vacationRegistration()
+                            openCalendarEvent(context, localDateToCalendar(viewModel.firstSelectedDate.value!!), localDateToCalendar(viewModel.lastSelectedDate.value!!))
                         }
                     },
                     enabled = viewModel.isEnabledPlannedFirst && viewModel.isEnabledPlannedSecond,
