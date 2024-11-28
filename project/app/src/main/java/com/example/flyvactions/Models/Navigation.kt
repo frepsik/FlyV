@@ -47,8 +47,18 @@ fun Navigate(){
     val currentBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry.value?.destination?.route
 
-    //условием сделал просто заглушку, ничего умней щас не придумаю, главное, в loginView не будет доступно бургер меню
-    if(currentRoute == "loginView"){
+    //Бургре меню
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        gesturesEnabled = currentRoute!="loginView" && currentRoute != "profileView" && currentRoute!= "editProfileView",
+        drawerContent = {
+            DrawerContent(
+                navController,
+                coroutineScope,
+                drawerState
+            )
+        }
+    ){
         //Вся структура по возможным маршрутам
         NavHost(navController = navController, startDestination = startDestination){
 
@@ -72,8 +82,7 @@ fun Navigate(){
             //Здесь ещё в аргументе передаем необходимое значение,
             // чтобы определить с какого окна приходим и отобразить нужную анимацию
             composable(
-                route = "profileView?from={from}",
-                arguments = listOf(navArgument("from"){ defaultValue = "mainView" }),
+                route = "profileView",
 
                 //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна mainView, editProfileView (уже не уверен, странно работает))
                 enterTransition = {
@@ -255,229 +264,6 @@ fun Navigate(){
                 }
             ){ BusinessTripScreen(navController) }
 
-        }
-    }
-    else{
-        //Бургре меню
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            gesturesEnabled = true,
-            drawerContent = {
-                DrawerContent(
-                    navController,
-                    coroutineScope,
-                    drawerState
-                )
-            },
-
-            ){
-            //Вся структура по возможным маршрутам
-            NavHost(navController = navController, startDestination = startDestination){
-
-                composable(route = "loginView"){
-                    LoginScreen(navController)
-                }
-
-                composable(
-                    route = "mainView",
-                    //Срабатывает, когда я нажимаю на кнопку профиля пользователя (navigate отрабатывает в этот момент)
-                    exitTransition = {
-                        fadeOut(animationSpec = tween(1500)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Start,
-                            tween(1500)
-                        )
-                    }
-                ){
-                    MainScreen(navController, drawerState, coroutineScope)
-                }
-
-                //Здесь ещё в аргументе передаем необходимое значение,
-                // чтобы определить с какого окна приходим и отобразить нужную анимацию
-                composable(
-                    route = "profileView?from={from}",
-                    arguments = listOf(navArgument("from"){ defaultValue = "mainView" }),
-
-                    //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна mainView, editProfileView (уже не уверен, странно работает))
-                    enterTransition = {
-                        fadeIn(animationSpec = tween(600)) + slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            tween(600))
-                    },
-                    //Срабатывает когда я через navigate перехожу на другое окно
-                    exitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            tween(600)
-                        )
-                    },
-                    //Срабатывает когда я выхожу с окна использовав popBackStack (свайп или кнопка на сенсоре телефона)
-                    popExitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    },
-                    popEnterTransition = {
-                        fadeIn(animationSpec = tween(600)) + slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600))
-                    }
-                ){
-                    ProfileScreen(navController)
-                }
-
-                composable(
-                    "editProfileView",
-                    //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна profileView)
-                    enterTransition = {
-                        fadeIn(animationSpec = tween(600)) + slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            tween(600))
-                    },
-                    //Срабатывает когда я через navigate перехожу на другое окно
-                    exitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    },
-                    //Срабатывает когда я выхожу с окна использовав popBackStack (свайп или кнопка на сенсоре телефона)
-                    popExitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    }
-                ){
-                    EditProfileScreen(navController)
-                }
-
-                //Календарь
-                composable(
-                    route = "calendarView",
-
-                    enterTransition = {
-                        fadeIn(animationSpec = tween(600)) + slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            tween(600))
-                    },
-                    //Срабатывает когда я через navigate перехожу на другое окно
-                    exitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    },
-                    //Срабатывает когда я выхожу с окна использовав popBackStack (свайп или кнопка на сенсоре телефона)
-                    popExitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    }
-                )
-                { CalendarScreen(navController) }
-
-                //Отпуск
-                composable(
-                    route = "vacationView",
-                    enterTransition = {
-                        fadeIn(animationSpec = tween(600)) + slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            tween(600))
-                    },
-                    //Срабатывает когда я через navigate перехожу на другое окно
-                    exitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    },
-                    //Срабатывает когда я выхожу с окна использовав popBackStack (свайп или кнопка на сенсоре телефона)
-                    popExitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    }
-                ) { VacationScreen(navController) }
-
-                //Отгул
-                composable(
-                    route = "daysOffView",
-                    enterTransition = {
-                        fadeIn(animationSpec = tween(600)) + slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            tween(600))
-                    },
-                    //Срабатывает когда я через navigate перехожу на другое окно
-                    exitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    },
-                    //Срабатывает когда я выхожу с окна использовав popBackStack (свайп или кнопка на сенсоре телефона)
-                    popExitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    }
-                ){ DaysOffScreen(navController) }
-
-
-
-                //Больничный
-                composable(
-                    route = "medicalView",
-                    enterTransition = {
-                        fadeIn(animationSpec = tween(600)) + slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            tween(600))
-                    },
-                    //Срабатывает когда я через navigate перехожу на другое окно
-                    exitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    },
-                    //Срабатывает когда я выхожу с окна использовав popBackStack (свайп или кнопка на сенсоре телефона)
-                    popExitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    }
-                ){ MedicalScreen(navController) }
-
-                //Командировка
-                composable(
-                    route = "businessTripView",
-                    //Срабатывает когда я на окно попадаю через navigate("окно") (то есть с окна profileView)
-                    enterTransition = {
-                        fadeIn(animationSpec = tween(600)) + slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Left,
-                            tween(600))
-                    },
-                    //Срабатывает когда я через navigate перехожу на другое окно
-                    exitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    },
-                    //Срабатывает когда я выхожу с окна использовав popBackStack (свайп или кнопка на сенсоре телефона)
-                    popExitTransition = {
-                        fadeOut(animationSpec = tween(600)) + slideOutOfContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                            tween(600)
-                        )
-                    }
-                ){ BusinessTripScreen(navController) }
-
-            }
         }
     }
 

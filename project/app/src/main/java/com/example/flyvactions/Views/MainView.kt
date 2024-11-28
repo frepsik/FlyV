@@ -128,9 +128,9 @@ fun MainScreen(
                                viewModel.selectedDate.value = null
                                viewModel.clearListAEC()
 
-                               navHostController.navigate("profileView"){
-                                   launchSingleTop = true
-                               }
+                               Log.d("Navigation","NavigateToProfile")
+
+                                   navHostController.navigate("profileView")
 
                                viewModel.isEnabledProfile = false
                                CoroutineScope(Dispatchers.Main).launch {
