@@ -12,6 +12,29 @@ class Update {
     private val db = SupabaseConnection.supabase
 
     /**
+     * Запрос на обновление количества дней больничного
+     */
+    suspend fun updateAmountDaysForMedicalPeriodByUserId(idUser : String, amountDays : Int){
+        try {
+            db.from("AbsencesEmployees")
+                .update(
+                    {
+                        set("amount_day", amountDays)
+                    }
+                ){
+                    filter {
+                        eq("employee_id", idUser)
+                        eq("reason_id", "a02fb81d-b9e2-4079-b1ee-ba0798959127")
+                    }
+                }
+            Log.d("UpdateAmountDaysForMedicalPeriodByUserId", "UpdateSuccess")
+        }
+        catch (e:Exception){
+            Log.d("ExceptionUpdateAmountDaysForMedicalPeriodByUserId", "$e")
+        }
+    }
+
+    /**
      * Запрос на обновление количества отгулов пользователя
      */
     suspend fun updateDaysOffByUserId(idUser : String, daysOff : Int){
