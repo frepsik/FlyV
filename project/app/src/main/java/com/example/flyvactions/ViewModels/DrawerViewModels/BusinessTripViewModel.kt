@@ -143,7 +143,7 @@ class BusinessTripViewModel : ViewModel() {
                 .filter {
                     convertStringToLocalDate(it.beginDate) >= borderDate //В учёт берём минус месяц от текущей даты и до конца, что там будет (больше двух отпусков пользователь не возьмёт)
                 }
-            
+
             if(listReasonsAbsencesEmployeeByVacation.isNotEmpty()){
                 listReasonsAbsencesEmployeeByVacation.forEach{
                     //Заполняем список диапазонами дат, когда у пользователя отпуск
