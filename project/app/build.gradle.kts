@@ -1,3 +1,5 @@
+import kotlinx.coroutines.Dispatchers
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -82,4 +84,7 @@ dependencies {
     //Coil
     implementation (libs.coil.compose)
 
+    //Тестирование.
+    testImplementation (libs.kotlinx.coroutines.test) //Нужно для использование специализированного потока в тестировании - Dispatchers.setMain(Dispatchers.Unconfined)
+    testImplementation (libs.mockk) //Для того, чтобы я мог заглушки на методы ставить
 }

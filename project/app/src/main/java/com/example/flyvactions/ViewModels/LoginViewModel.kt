@@ -29,6 +29,9 @@ class LoginViewModel:ViewModel() {
     private val _userState = mutableStateOf<BaseState>(BaseState.Loading)
     val userState: State<BaseState> = _userState
 
+    /**
+     * Функция авторизации пользователя
+     */
     fun onSignInEmailPassword(){
 
         viewModelScope.launch {
