@@ -39,33 +39,36 @@ class BalanceHolidayCardViewModel : ViewModel() {
      * Функция на получение отсутствий пользователя, чтобы определить, запланированные дни отсуствия по отпуску
      */
     fun fetchAbsencesEmployee(){
-        var _daysVacationsForExperience = if(Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years > 3) { 3 }
-        else {Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years}
-        val borderDate = LocalDate.now().minusDays(31)
-        viewModelScope.launch {
-            //Получаем id необходимой причины
-            val idReasonVacation = get.getReasonAbsenceByName("Отпуск")!!.id
+        if(ProfileCache.profile.userInfo!=null){
+            var _daysVacationsForExperience = if(Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years > 3) { 3 }
+            else {Period.between(ProfileCache.profile.hireDate, LocalDate.now()).years}
+            val borderDate = LocalDate.now().minusDays(31)
+            viewModelScope.launch {
 
-            //Получаем все записи отсуствия пользователя по причине отпуск (их может быть не более двух по логике моего "предприятия")
-            val listReasonsAbsencesEmployee : List<AbsenceEmployee> = get
-                .getAbsencesEmployeesByIdUserAndReasonId(ProfileCache.profile.userInfo!!.id, idReasonVacation)
-                .filter { convertStringToLocalDate(it.beginDate) >= borderDate } //В учёт берём минус месяц от текущей даты и до конца, что там будет (больше двух отпусков пользователь не возьмёт)
-            Log.d("listVacations", "$listReasonsAbsencesEmployee")
-            var getDaysVacationPlanned : Int = 0
-            listReasonsAbsencesEmployee.forEach{
-                getDaysVacationPlanned += it.amountDay
-            }
-            if(getDaysVacationPlanned in 14..17){
-                daysVacationsForExperiencePlanned = getDaysVacationPlanned - 14 //Получаем количество запланированных за стаж
-                _daysVacationsForExperience -= daysVacationsForExperiencePlanned //Получаем нынешний баланс за стаж с учётом запланированных
-                daysVacationPlanned = 14 //Тут два сценария, либо 14, либо 28, остальное это дни за стаж, которые можно добавить к 14 или 28
-                daysVacationsForExperience = _daysVacationsForExperience
-            }
-            else if(getDaysVacationPlanned in 28..31){
-                daysVacationsForExperiencePlanned = getDaysVacationPlanned - 28
-                _daysVacationsForExperience -= daysVacationsForExperiencePlanned
-                daysVacationPlanned = 28
-                daysVacationsForExperience = _daysVacationsForExperience
+                //Получаем id необходимой причины
+                val idReasonVacation = get.getReasonAbsenceByName("Отпуск")!!.id
+
+                //Получаем все записи отсуствия пользователя по причине отпуск (их может быть не более двух по логике моего "предприятия")
+                val listReasonsAbsencesEmployee : List<AbsenceEmployee> = get
+                    .getAbsencesEmployeesByIdUserAndReasonId(ProfileCache.profile.userInfo!!.id, idReasonVacation)
+                    .filter { convertStringToLocalDate(it.beginDate) >= borderDate } //В учёт берём минус месяц от текущей даты и до конца, что там будет (больше двух отпусков пользователь не возьмёт)
+                Log.d("listVacations", "$listReasonsAbsencesEmployee")
+                var getDaysVacationPlanned : Int = 0
+                listReasonsAbsencesEmployee.forEach{
+                    getDaysVacationPlanned += it.amountDay
+                }
+                if(getDaysVacationPlanned in 14..17){
+                    daysVacationsForExperiencePlanned = getDaysVacationPlanned - 14 //Получаем количество запланированных за стаж
+                    _daysVacationsForExperience -= daysVacationsForExperiencePlanned //Получаем нынешний баланс за стаж с учётом запланированных
+                    daysVacationPlanned = 14 //Тут два сценария, либо 14, либо 28, остальное это дни за стаж, которые можно добавить к 14 или 28
+                    daysVacationsForExperience = _daysVacationsForExperience
+                }
+                else if(getDaysVacationPlanned in 28..31){
+                    daysVacationsForExperiencePlanned = getDaysVacationPlanned - 28
+                    _daysVacationsForExperience -= daysVacationsForExperiencePlanned
+                    daysVacationPlanned = 28
+                    daysVacationsForExperience = _daysVacationsForExperience
+                }
             }
         }
     }

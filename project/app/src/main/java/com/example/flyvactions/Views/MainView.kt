@@ -95,7 +95,7 @@ fun MainScreen(
            ) {
                Icon(
                    imageVector = ImageVector.vectorResource(id = R.drawable.burger),
-                   contentDescription = "",
+                   contentDescription = "burger",
                    Modifier
                        .size(23.dp)
                        .clickable {
