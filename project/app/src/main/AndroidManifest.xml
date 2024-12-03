@@ -7,7 +7,7 @@
     <!--Для работы с текущим соединением-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!--Для работы с календарём, не совсем уверен, что второе надо-->
+    <!--Для работы с календарём-->
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
 

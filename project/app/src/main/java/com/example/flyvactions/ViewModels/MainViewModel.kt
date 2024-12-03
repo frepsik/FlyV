@@ -58,7 +58,13 @@ class MainViewModel : ViewModel() {
     val dateEndWeek: LocalDate = dateBeginWeek.plusDays(6)
     val dayBeginWeek = dateBeginWeek.dayOfMonth
     val dayEndWeek = dateEndWeek.dayOfMonth
-    val monthSecond = if(dateEndWeek.dayOfMonth >= 1) {"${months[dateEndWeek.monthValue-1]}"} else { "" }
+    val monthSecond =
+        if(dateEndWeek.dayOfMonth in 1..5 && dateBeginWeek.dayOfMonth !in 1..5) {
+            "${months[dateEndWeek.monthValue-1]}"
+        }
+        else {
+            ""
+        }
     val month: String = if(monthSecond.isEmpty()) {months[currentDate.monthValue - 1]} else {"${months[currentDate.monthValue - 1]} - ${monthSecond.lowercase()}"}
     private val outputFormatter = DateTimeFormatter.ofPattern("dd.MM")
 
