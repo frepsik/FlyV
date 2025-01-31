@@ -98,4 +98,4 @@ git clone https://github.com/frepsik/FlyV.git
 ## Авторы
 
 
-[![Made by](https://img.shields.io/badge/frepsik-green)](https://github.com/frepsik)
+[![Made by frepsik](https://img.shields.io/static/v1?label=Made%20by&message=frepsik&color=green)](https://github.com/frepsik)
