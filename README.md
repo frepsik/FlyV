@@ -4,7 +4,7 @@
 ![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV?color=green)
 
 <p align="center">
-  <img src="./docs/images/logo.jpg" alt="logo" width="500" height="400">
+  <img src="./docs/images/logo.jpg" alt="logo" width="450" height="400">
 </p>
 
 ## Описание
