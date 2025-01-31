@@ -4,7 +4,7 @@
 ![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV?color=green)
 
 <p align="center">
-  <img src="./docs/images/logo.jpg" alt="logo" width="400" height="400">
+  <img src="./docs/images/logo.jpg" alt="logo" width="500" height="400">
 </p>
 
 ## Описание
@@ -18,7 +18,7 @@
 
 UML UseCase диаграмма для программного решения **FlyV**
 <p align="center">
-  <img src="./docs/images/UseCase.jpg" alt="uml"  width="600" height="600">
+  <img src="./docs/images/UseCase.jpg" alt="uml"  width="800" height="600">
 </p>
 
 Для разработки серверной части программного продукта, использовался следующий сервис - **Supbase**
