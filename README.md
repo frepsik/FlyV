@@ -1,7 +1,7 @@
 # **FlyV**
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue) 
-![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV?color=green)
+![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV?color=purple)
 
 <p align="center">
   <img src="./docs/images/logo.jpg" alt="logo" width="430" height="400">
@@ -10,18 +10,18 @@
 ## Описание
 
 **FlyV** - система управления отпускными периодами сотрудников (СУОП). Основным предназначением разработанного мобильного программного обеспечения “FlyV” являлась реализация автоматизации следующих процессов:
-- [X] Планирование и контроль отпуска в предприятия
-- [X] Оформления отгула
-- [X] Оформления больничного
-- [X] Просмотр отсутствующих на предприятии
-- [X] Просмотр наличия командировки
+- [X] Планирование и контроль отпуска в предприятия;
+- [X] Оформления отгула;
+- [X] Оформления больничного;
+- [X] Просмотр отсутствующих на предприятии;
+- [X] Просмотр наличия командировки.
 
 UML UseCase диаграмма для программного решения **FlyV**
 <p align="center">
   <img src="./docs/images/UseCase.jpg" alt="uml"  width="830" height="600">
 </p>
 
-Для разработки серверной части программного продукта, использовался следующий сервис - **Supbase**
+Для разработки серверной части программного продукта, использовался следующий сервис - [Supbase](https://www.youtube.com/watch?v=_iXUVJ6HTHU&t=38s)
 <p align="center">
   <img src="./docs/images/supabase.jpg" alt="database"  width="150" height="150">
 </p>
@@ -33,12 +33,51 @@ UML UseCase диаграмма для программного решения **
 **Основные окна** мобильного приложения FlyV:
 
 <p align="center">
-  <img src="./docs/images/main.jfif" alt="main"">
-  <img src="./docs/images/profile.jfif" alt="profile"">
-  <img src="./docs/images/calendar.jfif" alt="calendar"">
-  img src="./docs/images/vacation.jfif" alt="vacation"">
+  <img src="./docs/images/main.jfif" alt="main" width="430" height="830">
+  <img src="./docs/images/profile.jfif" alt="profile" width="430" height="830">
+  <img src="./docs/images/calendar.jfif" alt="calendar" width="430" height="830">
+  img src="./docs/images/vacation.jfif" alt="vacation" width="430" height="830">
 </p>
 
+
+## Основные технологии в проекте
+
+Для того, чтобы разработать данное программное обеспечение, были использован следующий перечень технологий:
+- Android Studio:
+  - ЯП: Kotlin.
+- Supabase.
+
+В данном приложении был создан, специализированный функционал, что предоставляет пользователю возможность, в результате оформления отпуска, добавить системное событие на мобильный телефон, о том, что у него будет отпуск, в выбранный период. Рассмотрим небольшую часть данного функционала:
+```kotlin
+ val intent = Intent(Intent.ACTION_INSERT).apply {
+        type = "vnd.android.cursor.item/event"
+        putExtra(CalendarContract.Events.TITLE, "Отпуск")  // Название события
+
+        putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, firstDateEvent.timeInMillis)  // Время начала отпуска
+        putExtra(CalendarContract.EXTRA_EVENT_END_TIME, lastDateEvent.timeInMillis)  // Время окончания отпуска
+
+        putExtra(CalendarContract.Events.DESCRIPTION, "Описание события: отпуск")  // Описание
+    }
+```
+
+## Уникальные особенности проекта
+
+- [X] Интерактивный календарь - полностью разработанный вручную, что демонстрирует отсутствия сотрудников на рабочем месте;
+- [X] Аналитика - отчёты об отсутствии, что позволят избежать различных проблем, касающихся отсутствий;
+- [X] Уведомления - напоминание о предстоящих отпусках.
+
+
+## Установка
+
+Если вы хотите установить данный продукт, необходимо использовать следующую команду:
+```
+git clone https://github.com/frepsik/FlyV.git
+```
+
+Далее, для того, чтобы запустить само приложение для проведения дальнейшего тестирования и эксплуатации, необходимо открыть программное обеспечение **Android Studio** и выполнить следующий перечень шагов:
+1. В открывшемся приложении необходимо открыть новый проект;
+2. Далее произвести основную настройку проекта в Android Studio;
+3. И в результате необходимо произвести запуск открытого проекта.
 
 ## Описание коммитов
 | Название | Описание                                                        |
@@ -56,5 +95,6 @@ UML UseCase диаграмма для программного решения **
 | style	   | Правки по кодстайлу (табы, отступы, точки, запятые и т.д.)      |
 | test	   | Добавление тестов                                               |
 
-# Макет мобильного приложения
-Ссылка на проект в Figma - https://www.figma.com/design/q6hpv1pT2QsWfcxqRGqnOh/FlyV?node-id=0-1&t=xfBbl48xgrvOwfDM-1
+## Авторы
+
+[![Made by](https://img.shields.io/badge/Freps-blue)](https://github.com/frepsik)
