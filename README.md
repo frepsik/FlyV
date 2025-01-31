@@ -1,10 +1,10 @@
 # **FlyV**
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue) 
-![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV)
+![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV?color=green)
 
 <p align="center">
-  <img src="./docs/images/logo.jpg" alt="logo">
+  <img src="./docs/images/logo.jpg" alt="logo" width="450" height="400">
 </p>
 
 ## Описание
@@ -18,12 +18,12 @@
 
 UML UseCase диаграмма для программного решения **FlyV**
 <p align="center">
-  <img src="./docs/images/UseCase.jpg" alt="uml">
+  <img src="./docs/images/UseCase.jpg" alt="uml"  width="800" height="600">
 </p>
 
 Для разработки серверной части программного продукта, использовался следующий сервис - **Supbase**
 <p align="center">
-  <img src="./docs/images/supabase.jpg" alt="database">
+  <img src="./docs/images/supabase.jpg" alt="database"  width="150" height="150">
 </p>
 
 
