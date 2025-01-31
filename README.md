@@ -33,10 +33,10 @@ UML UseCase диаграмма для программного решения **
 **Основные окна** мобильного приложения FlyV:
 
 <p align="center">
-  <img src="./docs/images/main.jfif" alt="main" width="100" height="400">
-  <img src="./docs/images/profile.jfif" alt="profile" width="100" height="400">
-  <img src="./docs/images/calendar.jfif" alt="calendar" width="100" height="400">
-  <img src="./docs/images/vacation.jfif" alt="vacation" width="100" height="400">
+  <img src="./docs/images/main.jfif" alt="main" width="100" height="400" style="margin-right: 20px;">
+  <img src="./docs/images/profile.jfif" alt="profile" width="200" height="400" style="margin-right: 20px;">
+  <img src="./docs/images/calendar.jfif" alt="calendar" width="200" height="400" style="margin-right: 20px;">
+  <img src="./docs/images/vacation.jfif" alt="vacation" width="200" height="400">
 </p>
 
 
