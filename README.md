@@ -33,10 +33,10 @@ UML UseCase диаграмма для программного решения **
 **Основные окна** мобильного приложения FlyV:
 
 <p align="center">
-  <img src="./docs/images/main.jfif" alt="main" width="430" height="830">
-  <img src="./docs/images/profile.jfif" alt="profile" width="430" height="830">
-  <img src="./docs/images/calendar.jfif" alt="calendar" width="430" height="830">
-  img src="./docs/images/vacation.jfif" alt="vacation" width="430" height="830">
+  <img src="./docs/images/main.jfif" alt="main" width="100" height="400">
+  <img src="./docs/images/profile.jfif" alt="profile" width="100" height="400">
+  <img src="./docs/images/calendar.jfif" alt="calendar" width="100" height="400">
+  <img src="./docs/images/vacation.jfif" alt="vacation" width="100" height="400">
 </p>
 
 
@@ -97,4 +97,4 @@ git clone https://github.com/frepsik/FlyV.git
 
 ## Авторы
 
-[![Made by](https://img.shields.io/badge/Freps-blue)](https://github.com/frepsik)
+[![Made by](https://img.shields.io/badge/Made%20by-grey)](https://github.com/frepsik) [![frepsik](https://img.shields.io/badge/frepsik-green)](https://github.com/frepsik)
