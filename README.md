@@ -1,6 +1,7 @@
 # **FlyV**
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.0.0-blue) 
+![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV)
 
 <p align="center">
   <img src="./docs/images/logo.jpg" alt="logo">
