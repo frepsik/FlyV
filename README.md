@@ -4,7 +4,7 @@
 ![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV?color=green)
 
 <p align="center">
-  <img src="./docs/images/logo.jpg" alt="logo" width="450" height="400">
+  <img src="./docs/images/logo.jpg" alt="logo" width="430" height="400">
 </p>
 
 ## Описание
@@ -18,12 +18,25 @@
 
 UML UseCase диаграмма для программного решения **FlyV**
 <p align="center">
-  <img src="./docs/images/UseCase.jpg" alt="uml"  width="800" height="600">
+  <img src="./docs/images/UseCase.jpg" alt="uml"  width="830" height="600">
 </p>
 
 Для разработки серверной части программного продукта, использовался следующий сервис - **Supbase**
 <p align="center">
   <img src="./docs/images/supabase.jpg" alt="database"  width="150" height="150">
+</p>
+
+Для полноценного ознакомления с данным программным решением, вы можете рассмотреть [документацию](https://github.com/frepsik/FlyV/blob/master/docs/Общий%20отчёт%20и%20презентация/Общий%20отчёт%20по%20FlyV.pdf), в которой подробно рассмотрены все различные аспекты разработанного мобильного программного продукта.
+
+## Демонстрация продукта
+
+**Основные окна** мобильного приложения FlyV:
+
+<p align="center">
+  <img src="./docs/images/main.jfif" alt="main"">
+  <img src="./docs/images/profile.jfif" alt="profile"">
+  <img src="./docs/images/calendar.jfif" alt="calendar"">
+  img src="./docs/images/vacation.jfif" alt="vacation"">
 </p>
 
 
