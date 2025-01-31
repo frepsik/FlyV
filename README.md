@@ -1,7 +1,7 @@
 # **FlyV**
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue) 
-![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV-red)
+![GitHub language](https://img.shields.io/github/languages/top/frepsik/FlyV?color=green)
 
 <p align="center">
   <img src="./docs/images/logo.jpg" alt="logo">
